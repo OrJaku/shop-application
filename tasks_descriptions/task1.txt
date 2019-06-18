@@ -1,0 +1,22 @@
+1. Make new git branch
+2. Create virtualenv for project and add virtualenv path to .gitignore
+3. Install flask
+4. Add requirements.txt file and add flask dependency.
+5. Make simple flask app with endpoint /shop/products
+that returns 2 products in json format:
+
+    [
+        {
+            "id": 1,
+            "name": "Product 1",
+        },
+        {
+            "id": 2,
+            "name": "Product 2"
+        }
+    ]
+
+6. Commit changes and add git tag (0.1.0)
+
+How-to:
+https://www.patricksoftwareblog.com/steps-for-starting-a-new-flask-project-using-python3/
