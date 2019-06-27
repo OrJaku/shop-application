@@ -15,4 +15,3 @@ def prodacts():
 @Zad1.route('/shop')
 def shop():
     return render_template("shop.html", list_url=list_p)
-    r.json()
