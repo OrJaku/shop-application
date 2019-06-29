@@ -1,12 +1,15 @@
 <!doctype html>
-<title>Prodact list:</title>
+<title>Product list</title>
+<h1>Product list:</h1>
 <ul>
 
-   {% for item in list_p %}
+   {% for item in products_list %}
 
       <li> {{ item }}</li>
    {% endfor %}
 
 </ul>
 
-<p><a href="{{ url_for('home') }}">Add prodacts</a></p>
+<p><a href="{{ url_for('products') }}">Add products</a></p>
+
+<p><a href="{{ url_for('home') }}">Home</a></p>
