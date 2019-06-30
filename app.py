@@ -19,8 +19,7 @@ def add():
     return redirect(url_for('products'))
 
 
-
 @app.route('/shop', methods=['GET'])
 def shop():
 
-    return render_template("shop.html", products_list = products_list)
+    return render_template("shop.html", products_list=products_list)
