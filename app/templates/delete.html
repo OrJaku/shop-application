@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>Product list</title>
+</head>
+   <body>
+   <h1>Delete product </h1>
+     <form class="add-form" method="POST" action="{{ url_for('delete') }}">
+         <input name="product" value=""/>
+        <button type="submit">Delete</button>
+     </form>
+   </body>
+<p><a href="{{ url_for('shop') }}">Shop</a></p>
+</html>
