@@ -27,9 +27,10 @@ def remove():
 
 @app.route('/add', methods=['POST'])
 def add():
-    product_name = request.form['product']
-    product = Product(name=product_name)
-    db.session.add(product)
+    product_name = request.form['pr_name']
+    product_price = request.form['pr_price']
+    new_product = Product(name=product_name, price=product_price)
+    db.session.add(new_product)
     db.session.commit()
     return redirect(url_for('products'))
 
@@ -37,15 +38,15 @@ def add():
 @app.route('/delete', methods=['POST'])
 def delete():
     products_list = db.session.query(Product).all()
-    product_name = request.form['product']
-    product = Product(name=product_name)
-    if product == products_list:
-        db.session.delete(product)
+    product_name = request.form['pr_name']
+    rem_product = Product(name=product_name)
+    if rem_product == products_list:
+        db.session.delete(rem_product)
         db.session.commit()
     else:
         print('Brak produktu')
         print(products_list)
-        print(product)
+        print(rem_product)
     return redirect(url_for('remove'))
 
 @app.route('/shop', methods=['GET'])
