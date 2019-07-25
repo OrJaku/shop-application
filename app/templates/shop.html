@@ -1,10 +1,10 @@
 <!doctype html>
 <title>Product list</title>
 <h1>Product list:</h1>
-<ul>
+<ol type="1">
    {% for item in products_list %}
       <li> {{ item }}</li>
    {% endfor %}
-</ul>
+</ol>
 <p><a href="{{ url_for('products') }}">Add products</a></p>
 <p><a href="{{ url_for('home') }}">Home</a></p>
