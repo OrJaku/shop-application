@@ -1,11 +1,20 @@
-import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+from .config import app_config
+db = SQLAlchemy()
 
-app.config.from_object(os.environ['APP_SETTINGS'])
 
-db = SQLAlchemy(app)
+def create_app(config_shop):
 
-from app import views
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(app_config['development'])
+    app.config.from_pyfile('config.py')
+
+    db.init_app(app)
+
+    from app import models
+
+    from .shop import shop as shop_blueprint
+    app.register_blueprint(shop_blueprint)
+    return app

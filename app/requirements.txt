@@ -1,5 +1,6 @@
 alembic==1.0.11
 autoenv==1.0.0
+blueprint==3.4.2
 Click==7.0
 Flask==1.0.3
 Flask-Migrate==1.8.0

@@ -4,10 +4,10 @@
 </head>
    <body>
    <h1>Delete product </h1>
-     <form class="add-form" method="POST" action="{{ url_for('delete') }}">
+     <form class="add-form" method="POST" action="{{ url_for('shop.delete') }}">
          <input name="pr_name" value=""/>
         <button type="submit">Delete</button>
      </form>
    </body>
-<p><a href="{{ url_for('shop') }}">Shop</a></p>
+<p><a href="{{ url_for('shop.shop_list') }}">List</a></p>
 </html>
