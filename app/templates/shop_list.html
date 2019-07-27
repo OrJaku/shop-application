@@ -1,10 +1,32 @@
-<!doctype html>
-<title>Product list</title>
-<h1>Product list:</h1>
-<ol type="1">
-   {% for item in products_list %}
-      <li> {{ item }}</li>
-   {% endfor %}
-</ol>
-<p><a href="{{ url_for('shop.products') }}">Add products</a></p>
-<p><a href="{{ url_for('shop.home') }}">Home</a></p>
+{% extends "body.html" %}
+{% block title %}Products{% endblock%}
+{% block h1 %}Product list{% endblock%}
+{% block page %}
+<body id="shop_list">
+   <table border="1">
+      <colgroup span="3"></colgroup>
+        <tr>
+            <th><p>Name</p></th>
+            <th><p>Price</p></th>
+            <th><p>ID</p></th>
+        </tr>
+        <tr>
+           <td>
+               {% for item in products_name %}
+                  <p> {{ item }}</p>
+               {% endfor %}
+           </td>
+            <td>
+               {% for item in products_price %}
+                <p> {{ item }}</p>
+               {% endfor %}
+           </td>
+            <td>
+               {% for item in products_id %}
+                  <p> {{ item }}</p>
+               {% endfor %}
+           </td>
+         </tr>
+   </table>
+</body>
+{% endblock %}

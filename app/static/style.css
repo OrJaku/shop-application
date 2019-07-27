@@ -1,0 +1,53 @@
+body { margin-top: 1px; background-color: #FFE;  font: 1em arial,tahoma,sans-serif; }
+h1 { margin: 0.1em 2em 0.1em 1em;; font-size: 20px }
+h2 { margin-left: 20px; font-size: 20px }
+
+body#home a#home,
+body#products a#products,
+body#shop_list a#shop_list,
+body#remove a#remove {
+	color: #FFFFFF;
+	background: #87CEEB;
+}
+
+ul {
+float: left;
+width: 100%;
+padding: 0;
+margin: 0;
+list-style: none;
+}
+#menu li a {
+display: block;
+float: left;
+text-align: center;
+width: 140px;
+height: 25px;
+margin: 0em;
+text-decoration: none;
+color: black;
+background-color: silver;
+border: 1px solid navy;
+box-shadow: 0px 2px 3px gray;
+-moz-box-shadow: 0px 2px 3px gray;
+}
+#menu li.active > a {
+    text-decoration: underline;
+     background-color: #999;
+    color: #FFFFFF;
+}
+
+#menu li :hover {
+color: #191970;
+background: #DCDCDC;
+border: 1px solid blue;
+}
+#menu{
+padding-top: 0.1em;
+padding-bottom: 4em;
+}
+#page {
+width: 80%; margin: 2em 2em 5em 2em; }
+p { margin-left: 20px; margin-right: 20px; }
+th { border: 3px solid #333; }
+td { border: 2px solid #333; }

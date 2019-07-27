@@ -10,4 +10,4 @@ class Product(db.Model):
 
     def __repr__(self):
 
-        return f'Name: {self.name}   Price: {self.price}   [ID:{self.id}]'
+        return f'{self.name} {self.price} {self.id}'

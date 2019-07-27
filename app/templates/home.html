@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Home</title>
-  </head>
-  <body>
-    <h1>Home</h1>
-   <p><a href="{{ url_for('shop.products') }}">Add products</a></p>
-   <p><a href="{{ url_for('shop.shop_list') }}">List</a></p>
-   <p><a href="{{ url_for('shop.remove') }}">Remove product</a></p>
-  </body>
-</html>
+{% extends "body.html" %}
+{% block title %}Home{% endblock%}
+{% block h1 %}Home{% endblock%}
+{% block page %}
+    <body id="home">
+       Shop application<br>Main page
+    </body>
+{% endblock %}

@@ -2,6 +2,7 @@ from . import shop
 from .. import db
 from flask import render_template, request, url_for, redirect
 from ..models import Product
+from colorama import Fore, Style  # test
 
 # db.create_all()
 # db.drop_all()
@@ -46,5 +47,14 @@ def delete():
 @shop.route('/list', methods=['GET'])
 def shop_list():
     products_list = db.session.query(Product).all()
-    print(products_list)
-    return render_template("shop_list.html", products_list=products_list)
+    products_name = db.session.query(Product.name).all()
+    products_name = ([x[0] for x in products_name])
+    products_price = db.session.query(Product.price).all()
+    products_price = ([x[0] for x in products_price])
+    products_id = db.session.query(Product.id).all()
+    products_id = ([x[0] for x in products_id])
+    print(Fore.GREEN + 'PR_NAME', products_list)  # test
+    print(Style.RESET_ALL)  # test
+    return render_template("shop_list.html", products_list=products_list,
+                           products_name=products_name, products_price=products_price,
+                           products_id=products_id)

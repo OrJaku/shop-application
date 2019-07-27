@@ -1,14 +1,13 @@
-<html>
-<head>
-    <title>Product list</title>
-</head>
-   <body>
-   <h1>Add product </h1>
-     <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
+{% extends "body.html" %}
+{% block title %}Add product{% endblock%}
+{% block h1 %}Add product{% endblock%}
+{% block page %}
+<body id="products">
+ <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
          <p>Name <input name="pr_name" value=""/></p>
          <p>Price <input name="pr_price" value=""/></p>
         <button type="submit">Add</button>
      </form>
-   </body>
-<p><a href="{{ url_for('shop.shop_list') }}">List</a></p>
-</html>
+</body>
+{% endblock %}
+
