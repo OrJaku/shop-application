@@ -4,10 +4,10 @@
 {% block page %}
 <body id="products">
  <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
-         <p>Name <input name="pr_name" value=""/></p>
-         <p>Price <input name="pr_price" value=""/></p>
-        <button type="submit">Add</button>
+         <label>Name<br> <input name="pr_name" value=""/></label><br><br>
+         <label>Price<br> <input name="pr_price" value=""/></label><br><br>
+        <button id="add" type="submit">Add</button>
      </form>
 </body>
-{% endblock %}
 
+{% endblock %}

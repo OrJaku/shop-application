@@ -1,15 +1,21 @@
-body { margin-top: 1px; background-color: #FFE;  font: 1em arial,tahoma,sans-serif; }
+body { margin-top: 1px; background-color: #FFE;  font: 1em arial,sans-serif; }
 h1 { margin: 0.1em 2em 0.1em 1em;; font-size: 20px }
 h2 { margin-left: 20px; font-size: 20px }
+p { margin-left: 10px; margin-right: 20px;, font: 1em arial,sans-serif; }
 
-body#home a#home,
-body#products a#products,
-body#shop_list a#shop_list,
-body#remove a#remove {
-	color: #FFFFFF;
-	background: #87CEEB;
+/* Table */
+th { border: 3px solid #333; }
+td { border: 2px solid #333; }
+#table p {
+color: black;
+margin-top: 5px; margin-bottom: 5px; margin-left: 10px; margin-right: 10px;
+text-align: center;
+}
+#table th {
+background-color: silver;
 }
 
+/* Menu bars */
 ul {
 float: left;
 width: 100%;
@@ -20,34 +26,80 @@ list-style: none;
 #menu li a {
 display: block;
 float: left;
+font-size: 16px;
 text-align: center;
 width: 140px;
-height: 25px;
+height: 22px;
 margin: 0em;
 text-decoration: none;
 color: black;
 background-color: silver;
-border: 1px solid navy;
+/*border: 1px solid navy; */
 box-shadow: 0px 2px 3px gray;
 -moz-box-shadow: 0px 2px 3px gray;
 }
-#menu li.active > a {
-    text-decoration: underline;
-     background-color: #999;
-    color: #FFFFFF;
-}
-
 #menu li :hover {
 color: #191970;
 background: #DCDCDC;
-border: 1px solid blue;
+/*border: 1px solid blue;*/
 }
 #menu{
 padding-top: 0.1em;
 padding-bottom: 4em;
 }
+body#home a#home,
+body#products a#products,
+body#shop_list a#shop_list,
+body#remove a#remove {
+	color: #FFFFFF;
+	background: #87CEEB;
+}
+/* Page */
 #page {
-width: 80%; margin: 2em 2em 5em 2em; }
-p { margin-left: 20px; margin-right: 20px; }
-th { border: 3px solid #333; }
-td { border: 2px solid #333; }
+width: 80%; margin: 2em 2em 2em 2em; }
+
+
+/* Buttons */
+button {
+  background-color: silver;
+  color: black;
+  padding: 10px 30px;
+  font: 1em arial, sans-serif;
+}
+button#add:hover {
+color: green;
+background: #DCDCDC;
+border: 1px solid green;
+}
+button#rem:hover {
+color: red;
+background: #DCDCDC;
+border: 1px solid red;
+}
+
+/* Input bars */
+input {
+color: black;
+background: #F0F0F0;
+  padding: 3px 0px;
+}
+label {
+color: #696969;
+}
+
+/* Flash message */
+#error{
+color: red;
+margin-top: 0.1em;
+font-weight: bold;
+}
+#info{
+color: Blue;
+margin-top: 0.1em;
+font-size: 16px;
+font-weight: bold;
+}
+#succes{
+color: Green;
+margin-top: 0.1em;
+}

@@ -4,8 +4,8 @@
 {% block page %}
 <body id="remove">
    <form class="add-form" method="POST" action="{{ url_for('shop.delete') }}">
-         <input name="pr_name" value=""/>
-        <button type="submit">Delete</button>
+       <label>Name<br> <input name="pr_name" value=""/></label><br><br>
+        <button id="rem" type="submit">Delete</button>
      </form>
 </body>
 {% endblock %}
