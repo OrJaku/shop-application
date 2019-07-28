@@ -1,8 +1,10 @@
-from . import shop
 from .. import db
 from flask import render_template, request, url_for, redirect, flash
 from ..models import Product
 from colorama import Fore, Style  # test
+from flask import Blueprint
+
+shop = Blueprint('shop', __name__, template_folder='templates')
 
 # db.create_all()
 # db.drop_all()
