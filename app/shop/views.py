@@ -32,23 +32,27 @@ def add():
         flash('Enter product name and price', 'error')
     else:
         db.session.add(new_product)
-        flash('Product %s (price: %s) hes been added' % (product_name, product_price), 'succes')
+        flash('Product %s (price: %s) has been added' % (product_name, product_price), 'succes')
         db.session.commit()
     return redirect(url_for('shop.products'))
 
 
 @shop.route('/delete', methods=['POST'])
 def delete():
-    product_name = request.form['pr_name']
-    if product_name == "del_all_prod":
+    product_remove = request.form['pr_name']
+    if product_remove == "del_all_prod":
         Product.query.filter().delete()
         db.session.commit()
-        flash('All products hes been removed from list', 'error')
+        flash('All products has been removed from list', 'error')
     else:
-        Product.query.filter_by(name=product_name).delete()
-        print("Product %s hes been removed" % product_name)
-        flash('Product %s hes been removed' % product_name, 'succes')
-        db.session.commit()
+        products_list = db.session.query(Product.name).all()
+        products_list = ([x[0] for x in products_list])
+        if product_remove in products_list:
+            Product.query.filter_by(name=product_remove).delete()
+            flash('Product %s has been removed' % product_remove, 'succes')
+            db.session.commit()
+        else:
+            flash('Product %s is not on list' % product_remove, 'error')
     return redirect(url_for('shop.remove'))
 
 
@@ -65,7 +69,6 @@ def shop_list():
     print(Style.RESET_ALL)  # test
     if not products_name:
         flash('Product list is empty, add product to list', 'info')
-        print('List is empty')
     return render_template("shop_list.html", products_list=products_list,
                            products_name=products_name, products_price=products_price,
                            products_id=products_id)
