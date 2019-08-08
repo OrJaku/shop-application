@@ -6,8 +6,7 @@ from flask import Blueprint
 
 shop = Blueprint('shop', __name__, template_folder='templates')
 
-# db.create_all()
-# db.drop_all()
+
 @shop.route('/')
 def home():
     return render_template("home.html")
