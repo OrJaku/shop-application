@@ -1,0 +1,32 @@
+{% extends "body.html" %}
+{% block title %}Register{% endblock%}
+{% block h1 %}Register{% endblock%}
+{% block page %}
+
+<body id="register">
+    <form action="" method="post" novalidate>
+        <p>
+            {{form.firstname.label}}<br>
+            {{form.firstname(size=32) }}<br>
+        </p>
+        <p>
+            {{form.lastname.label}}<br>
+            {{form.lastname(size=32) }}<br>
+        </p>
+        <p>
+            {{form.email.label}}<br>
+            {{form.email(size=32) }}<br>
+        </p>
+        <p>
+            {{form.username.label}}<br>
+            {{form.username(size=32) }}<br>
+        </p>
+        <p>
+            {{form.password.label}}<br>
+            {{form.password (size=32) }}<br>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+
+{% endblock %}

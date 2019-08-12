@@ -50,7 +50,11 @@ padding-bottom: 4em;
 body#home a#home,
 body#products a#products,
 body#shop_list a#shop_list,
-body#remove a#remove {
+body#remove a#remove,
+body#login a#login,
+body#register a#register
+
+{
 	color: #FFFFFF;
 	background: #87CEEB;
 }

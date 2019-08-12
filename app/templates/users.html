@@ -1,0 +1,18 @@
+{% extends "body.html" %}
+{% block title %}Users list{% endblock%}
+{% block h1 %}Users list{% endblock%}
+{% block page %}
+<body id="users">
+    <div id="table" class="cb">
+        <p>
+            {% for item in users_list %}
+                {{ item }} <br>
+            {% endfor %}
+        </p>
+
+
+
+    </div>
+</body>
+
+{% endblock %}

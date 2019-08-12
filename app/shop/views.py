@@ -1,8 +1,9 @@
 from .. import db
-from flask import render_template, request, url_for, redirect, flash
-from ..models import Product
+from flask import render_template, request, url_for, redirect, flash, Blueprint
+from flask_login import login_user, login_required, current_user
+from app.forms import LoginForm, RegisterForm
+from ..models import Product, User
 from colorama import Fore, Style  # test
-from flask import Blueprint
 
 shop = Blueprint('shop', __name__, template_folder='templates')
 
@@ -10,6 +11,39 @@ shop = Blueprint('shop', __name__, template_folder='templates')
 @shop.route('/')
 def home():
     return render_template("home.html")
+
+
+@shop.route('/login', methods=["GET", "POST"])
+def login():
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('home'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid login or password', 'error')
+            return redirect(url_for('login'))
+        login_user(user)
+        return redirect(url_for('shop.home'))
+    return render_template('login.html', title='Sing In', form=form)
+
+
+@shop.route('/register', methods=["POST", "GET"])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(firstname=form.firstname.data,
+                    lastname=form.lastname.data,
+                    username=form.username.data,
+                    email=form.email.data,
+                    password=form.password.data)
+        db.session.add(user)
+        db.commit()
+        flash('Registered successfully', 'success')
+        print(Fore.YELLOW + 'user', user)  # test#
+        print(Style.RESET_ALL)  # test
+        return redirect(url_for(login))
+    return render_template('register.html', title='Register', form=form)
 
 
 @shop.route('/products')
@@ -71,3 +105,11 @@ def shop_list():
     return render_template("shop_list.html", products_list=products_list,
                            products_name=products_name, products_price=products_price,
                            products_id=products_id)
+
+
+@shop.route('/users', methods=['GET'])
+def users():
+    users_list = db.session.query(User).all()
+    print(Fore.MAGENTA + 'Users', users_list)  # test#
+    print(Style.RESET_ALL)  # test
+    return render_template("users.html", users_list=users_list)
