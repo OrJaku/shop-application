@@ -13,37 +13,41 @@ def home():
     return render_template("home.html")
 
 
+@shop.route('/register', methods=["POST", "GET"])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(first=form.first.data,
+                    last=form.last.data,
+                    username=form.username.data,
+                    email=form.email.data,
+                    password=form.password.data)
+        print(Fore.GREEN + 'user', user)  # test#
+        print(Style.RESET_ALL)  # test
+        db.session.add(user)
+        db.session.commit()
+        flash('Registered successfully', 'success')
+        print(Fore.YELLOW + 'user', user)  # test#
+        print(Style.RESET_ALL)  # test
+        return redirect(url_for('shop.login'))
+    print(Fore.RED + 'form', form)  # test#
+    print(Style.RESET_ALL)  # test
+    return render_template('register.html', title='Register', form=form)
+
+
 @shop.route('/login', methods=["GET", "POST"])
 def login():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
+    if current_user.is_authenticated:
+        return redirect(url_for('shop.home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid login or password', 'error')
-            return redirect(url_for('login'))
+            return redirect(url_for('shop.login'))
         login_user(user)
         return redirect(url_for('shop.home'))
     return render_template('login.html', title='Sing In', form=form)
-
-
-@shop.route('/register', methods=["POST", "GET"])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(firstname=form.firstname.data,
-                    lastname=form.lastname.data,
-                    username=form.username.data,
-                    email=form.email.data,
-                    password=form.password.data)
-        db.session.add(user)
-        db.commit()
-        flash('Registered successfully', 'success')
-        print(Fore.YELLOW + 'user', user)  # test#
-        print(Style.RESET_ALL)  # test
-        return redirect(url_for(login))
-    return render_template('register.html', title='Register', form=form)
 
 
 @shop.route('/products')
@@ -90,7 +94,9 @@ def delete():
 
 
 @shop.route('/list', methods=['GET'])
+@login_required
 def shop_list():
+
     products_list = db.session.query(Product).all()
     products_name = db.session.query(Product.name).all()
     products_name = ([x[0] for x in products_name])

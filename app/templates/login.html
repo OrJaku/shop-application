@@ -15,7 +15,11 @@
             {{form.password (size=32) }}<br>
         </p>
         <p>{{ form.submit() }}</p>
+
     </form>
+    <ul>
+            <li><a href="{{ url_for('shop.users') }}" id="users">Users</a></li>
+    </ul>
 </body>
 
 {% endblock %}

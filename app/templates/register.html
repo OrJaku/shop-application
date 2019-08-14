@@ -4,14 +4,15 @@
 {% block page %}
 
 <body id="register">
-    <form action="" method="post" novalidate>
+    <form action="" method="post">
+         {{ form.hidden_tag() }}
         <p>
-            {{form.firstname.label}}<br>
-            {{form.firstname(size=32) }}<br>
+            {{form.first.label}}<br>
+            {{form.first(size=32) }}<br>
         </p>
         <p>
-            {{form.lastname.label}}<br>
-            {{form.lastname(size=32) }}<br>
+            {{form.last.label}}<br>
+            {{form.last(size=32) }}<br>
         </p>
         <p>
             {{form.email.label}}<br>
