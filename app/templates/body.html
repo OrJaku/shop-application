@@ -10,10 +10,14 @@
     <ul id="navibar">
         <li><a href="{{ url_for('shop.home') }}" id="home">Home</a></li>
         <li><a href="{{ url_for('shop.shop_list') }}" id="shop_list" >List</a></li>
+        <li><a href="{{ url_for('shop.users') }}" id="users">Users List</a></li>
         <li><a href="{{ url_for('shop.products') }}" id="products" >Add products</a></li>
         <li><a href="{{ url_for('shop.remove') }}" id="remove" >Remove product</a></li>
+        {% if current_user.is_anonymous %}
         <li><a href="{{ url_for('shop.login') }}" id="login">Login</a></li>
-        <li><a href="{{ url_for('shop.register') }}" id="register">Register</a></li>
+        {% else %}
+        <li><a href="{{ url_for('shop.logout') }}" id="logout">Logout: <b>{{ current_user}}</b></a></li>
+        {% endif %}
     </ul>
   </div>
    <h1>{% block h1 %}{% endblock %}</h1>

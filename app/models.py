@@ -22,8 +22,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    first = db.Column(db.String(128), unique=False, nullable=False)
-    last = db.Column(db.String(128), unique=False, nullable=False)
+    first_name = db.Column(db.String(128), unique=False, nullable=False)
+    last_name = db.Column(db.String(128), unique=False, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
 
     @property
@@ -38,7 +38,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f'"Username" {self.username}'
+        return f'{self.username}'
 
 
 @login.user_loader

@@ -1,6 +1,6 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm
 from ..models import Product, User
 from colorama import Fore, Style  # test
@@ -17,21 +17,17 @@ def home():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        user = User(first=form.first.data,
-                    last=form.last.data,
+        user = User(first_name=form.first_name.data,
+                    last_name=form.last_name.data,
                     username=form.username.data,
                     email=form.email.data,
                     password=form.password.data)
-        print(Fore.GREEN + 'user', user)  # test#
-        print(Style.RESET_ALL)  # test
         db.session.add(user)
         db.session.commit()
         flash('Registered successfully', 'success')
         print(Fore.YELLOW + 'user', user)  # test#
         print(Style.RESET_ALL)  # test
         return redirect(url_for('shop.login'))
-    print(Fore.RED + 'form', form)  # test#
-    print(Style.RESET_ALL)  # test
     return render_template('register.html', title='Register', form=form)
 
 
@@ -46,16 +42,26 @@ def login():
             flash('Invalid login or password', 'error')
             return redirect(url_for('shop.login'))
         login_user(user)
+        flash('You are logged in as %s' % (db.session.query(User.username).first()), 'success')
         return redirect(url_for('shop.home'))
     return render_template('login.html', title='Sing In', form=form)
 
 
+@shop.route('/logout')
+def logout():
+    logout_user()
+    flash('You are logged out', 'info')
+    return redirect(url_for('shop.home'))
+
+
 @shop.route('/products')
+@login_required
 def products():
     return render_template("products.html")
 
 
 @shop.route('/remove')
+@login_required
 def remove():
     return render_template("delete.html")
 
@@ -69,7 +75,7 @@ def add():
         flash('Enter product name and price', 'error')
     else:
         db.session.add(new_product)
-        flash('Product %s (price: %s) has been added' % (product_name, product_price), 'succes')
+        flash('Product %s (price: %s) has been added' % (product_name, product_price), 'success')
         db.session.commit()
     return redirect(url_for('shop.products'))
 
@@ -86,7 +92,7 @@ def delete():
         products_list = ([x[0] for x in products_list])
         if product_remove in products_list:
             Product.query.filter_by(name=product_remove).delete()
-            flash('Product %s has been removed' % product_remove, 'succes')
+            flash('Product %s has been removed' % product_remove, 'success')
             db.session.commit()
         else:
             flash('Product %s is not on list' % product_remove, 'error')
@@ -94,7 +100,6 @@ def delete():
 
 
 @shop.route('/list', methods=['GET'])
-@login_required
 def shop_list():
 
     products_list = db.session.query(Product).all()
@@ -114,6 +119,7 @@ def shop_list():
 
 
 @shop.route('/users', methods=['GET'])
+@login_required
 def users():
     users_list = db.session.query(User).all()
     print(Fore.MAGENTA + 'Users', users_list)  # test#

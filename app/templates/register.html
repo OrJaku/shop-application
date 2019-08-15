@@ -1,18 +1,19 @@
 {% extends "body.html" %}
-{% block title %}Register{% endblock%}
-{% block h1 %}Register{% endblock%}
+{% block title %}Registration{% endblock%}
+{% block h1 %}Registration{% endblock%}
 {% block page %}
 
 <body id="register">
     <form action="" method="post">
          {{ form.hidden_tag() }}
         <p>
-            {{form.first.label}}<br>
-            {{form.first(size=32) }}<br>
+            {{form.first_name.label}}<br>
+            {{form.first_name(size=32) }}<br>
+
         </p>
         <p>
-            {{form.last.label}}<br>
-            {{form.last(size=32) }}<br>
+            {{form.last_name.label}}<br>
+            {{form.last_name(size=32) }}<br>
         </p>
         <p>
             {{form.email.label}}<br>

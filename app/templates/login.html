@@ -14,12 +14,12 @@
             {{form.password.label}}<br>
             {{form.password (size=32) }}<br>
         </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit() }}</p><br>
 
     </form>
     <ul>
-            <li><a href="{{ url_for('shop.users') }}" id="users">Users</a></li>
-    </ul>
+            <li><a href="{{ url_for('shop.register') }}" id="users">Registration</a></li>
+    </ul><br><br>
 </body>
 
 {% endblock %}

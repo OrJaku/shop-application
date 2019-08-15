@@ -51,8 +51,9 @@ body#home a#home,
 body#products a#products,
 body#shop_list a#shop_list,
 body#remove a#remove,
+body#logout a#logout,
 body#login a#login,
-body#register a#register
+body#users a#users
 
 {
 	color: #FFFFFF;
@@ -103,7 +104,8 @@ margin-top: 0.1em;
 font-size: 16px;
 font-weight: bold;
 }
-#succes{
+#success{
 color: Green;
 margin-top: 0.1em;
+font-weight: bold;
 }
