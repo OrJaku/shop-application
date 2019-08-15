@@ -22,6 +22,9 @@ def register():
                     username=form.username.data,
                     email=form.email.data,
                     password=form.password.data)
+        if len(form.password.data) < 6:
+            flash('Password is too short', 'error')
+            return redirect(url_for('shop.register'))
         db.session.add(user)
         db.session.commit()
         flash('Registered successfully', 'success')
@@ -52,6 +55,18 @@ def logout():
     logout_user()
     flash('You are logged out', 'info')
     return redirect(url_for('shop.home'))
+
+
+@shop.route('/users', methods=['GET'])
+@shop.route('/users/ <username>')
+@login_required
+def users(username=None):
+    users_list = db.session.query(User).all()
+    print(Fore.MAGENTA + 'Users', users_list)  # test#
+    print(Style.RESET_ALL)  # test
+    if username is not None:
+        return render_template("user.html")
+    return render_template("users.html", users_list=users_list, username=username)
 
 
 @shop.route('/products')
@@ -116,12 +131,3 @@ def shop_list():
     return render_template("shop_list.html", products_list=products_list,
                            products_name=products_name, products_price=products_price,
                            products_id=products_id)
-
-
-@shop.route('/users', methods=['GET'])
-@login_required
-def users():
-    users_list = db.session.query(User).all()
-    print(Fore.MAGENTA + 'Users', users_list)  # test#
-    print(Style.RESET_ALL)  # test
-    return render_template("users.html", users_list=users_list)

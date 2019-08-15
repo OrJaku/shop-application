@@ -3,10 +3,12 @@
 {% block h1 %}Users list{% endblock%}
 {% block page %}
 <body id="users">
-    {% for item in users_list %}
-        {{ item }} <br>
-    {% endfor %}
-
+    <ul id="usersbar">
+        {% for item in users_list %}
+        <li> <a href="{{ url_for('shop.users',username=item)}}" >{{ item }}</a> </li>
+        {% endfor %}
+    </ul>
 </body>
 
 {% endblock %}
+
