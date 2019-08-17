@@ -1,9 +1,15 @@
 {% extends "body.html" %}
-{% block title %}USER{% endblock%}
-{% block h1 %}USER{% endblock%}
+{% block title %}{{ username }}{% endblock%}
+{% block h1 %}Welcome <i>{{username}}</i>{% endblock%}
 {% block page %}
  <body id="USER">
-       USER<br>PROFILE TEST
+    <ul>
+        <li>Username: <b>{{ profile }}</b> </li>
+        <li>ID: <b>{{ profile.id }}</b> </li>
+        <li>First name: <b>{{ profile.first_name }}</b> </li>
+        <li>Last name: <b>{{ profile.last_name }}</b> </li>
+        <li>Email: <b>{{ profile.email }}</b> </li>
+    </ul>
  </body>
 
 {% endblock %}

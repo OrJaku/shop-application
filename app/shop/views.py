@@ -62,11 +62,12 @@ def logout():
 @login_required
 def users(username=None):
     users_list = db.session.query(User).all()
-    print(Fore.MAGENTA + 'Users', users_list)  # test#
-    print(Style.RESET_ALL)  # test
     if username is not None:
-        return render_template("user.html")
-    return render_template("users.html", users_list=users_list, username=username)
+        profile = User.query.filter_by(username=username).first_or_404()
+
+
+        return render_template("user.html", username=username, profile=profile)
+    return render_template("users.html", users_list=users_list)
 
 
 @shop.route('/products')
