@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(128), unique=False, nullable=False)
     last_name = db.Column(db.String(128), unique=False, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
+    role = db.Column(db.String(60), nullable=False)
 
     @property
     def password(self):

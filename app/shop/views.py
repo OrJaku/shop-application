@@ -1,6 +1,7 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_user import roles_required
 from app.forms import LoginForm, RegisterForm
 from ..models import Product, User
 from colorama import Fore, Style  # test
@@ -21,7 +22,8 @@ def register():
                     last_name=form.last_name.data,
                     username=form.username.data,
                     email=form.email.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    role='guest')
         if len(form.password.data) < 6:
             flash('Password is too short', 'error')
             return redirect(url_for('shop.register'))
@@ -57,17 +59,28 @@ def logout():
     return redirect(url_for('shop.home'))
 
 
-@shop.route('/users', methods=['GET'])
+@shop.route('/users', methods=['GET', 'POST'])
 @shop.route('/users/ <username>')
 @login_required
 def users(username=None):
     users_list = db.session.query(User).all()
     if username is not None:
+        roles = ['guest', 'moderator', 'admin']
         profile = User.query.filter_by(username=username).first_or_404()
-
-
-        return render_template("user.html", username=username, profile=profile)
+        print('Profile', profile)
+        return render_template("user.html", username=username, profile=profile, roles=roles)
     return render_template("users.html", users_list=users_list)
+
+
+@shop.route('/role/<username>', methods=['GET', 'POST'])
+def role(username):
+    new_role = request.form.get("role")
+    profile = User.query.filter_by(username=username).first()
+    old_role = profile.role
+    db.session.query(User).filter(User.username == username).update({'role': new_role})
+    db.session.commit()
+    flash('%s role has been changed to %s' % (old_role, new_role), 'success')
+    return redirect(url_for('shop.users'))
 
 
 @shop.route('/products')
