@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_user import roles_required
 from app.forms import LoginForm, RegisterForm
-from ..models import Product, User
+from ..models import Product, User, Role, UserRoles
 from colorama import Fore, Style  # test
 
 shop = Blueprint('shop', __name__, template_folder='templates')
@@ -23,7 +23,8 @@ def register():
                     username=form.username.data,
                     email=form.email.data,
                     password=form.password.data,
-                    role='guest')
+                    role=[Role.query.filter_by(name='guest').first()])
+
         if len(form.password.data) < 6:
             flash('Password is too short', 'error')
             return redirect(url_for('shop.register'))
@@ -65,21 +66,24 @@ def logout():
 def users(username=None):
     users_list = db.session.query(User).all()
     if username is not None:
-        roles = ['guest', 'moderator', 'admin']
         profile = User.query.filter_by(username=username).first_or_404()
+        role_temp_id = UserRoles.query.filter_by(user_id=profile.id).first().role_id
+        role_name = Role.query.filter_by(id=role_temp_id).first().name
+        print("ROLES", role_name)
         print('Profile', profile)
-        return render_template("user.html", username=username, profile=profile, roles=roles)
+        return render_template("user.html", username=username, profile=profile, role=role_name)
     return render_template("users.html", users_list=users_list)
 
 
 @shop.route('/role/<username>', methods=['GET', 'POST'])
 def role(username):
-    new_role = request.form.get("role")
-    profile = User.query.filter_by(username=username).first()
-    old_role = profile.role
-    db.session.query(User).filter(User.username == username).update({'role': new_role})
+    get_role_name = request.form.get("role")
+    get_role_id = Role.query.filter_by(name=get_role_name).first().id
+    print('Get role', get_role_id, get_role_name)
+    user_id = User.query.filter_by(username=username).first().id
+    db.session.query(UserRoles).filter(UserRoles.user_id == user_id).update({'role_id': get_role_id})
     db.session.commit()
-    flash('%s role has been changed to %s' % (old_role, new_role), 'success')
+    flash('Role has been changed',  'success')
     return redirect(url_for('shop.users'))
 
 

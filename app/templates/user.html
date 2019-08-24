@@ -9,13 +9,11 @@
         <li>First name: <b>{{ profile.first_name }}</b> </li>
         <li>Last name: <b>{{ profile.last_name }}</b> </li>
         <li>Email: <b>{{ profile.email }}</b> </li>
-        <li>Role: <b>{{ profile.role }}</b> </li>
-
-        </ul>
+        <li>Role: <b>{{ role }}</b> </li>
+    </ul>
             <form class="add-form" method="POST" action="{{ url_for('shop.role', username=profile)}}">
             <select  class="form-control" name="role" id="role">
                 <option value='guest'>guest </option>
-                <option value='moderator'>moderator </option>
                 <option value='admin'>admin </option>
             </select>
                 <button type="submit">Save</button>

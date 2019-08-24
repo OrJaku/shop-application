@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(128), unique=False, nullable=False)
     last_name = db.Column(db.String(128), unique=False, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    role = db.Column(db.String(60), nullable=False)
+    role = db.relationship('Role', secondary='user_roles')
 
     @property
     def password(self):
@@ -40,6 +40,20 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'{self.username}'
+
+
+class Role(db.Model):
+    __tabelename__ = 'role'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+
+
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
 
 
 @login.user_loader
