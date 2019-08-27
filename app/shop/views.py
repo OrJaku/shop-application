@@ -1,12 +1,21 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_user import roles_required
 from app.forms import LoginForm, RegisterForm
 from ..models import Product, User, Role, UserRoles
 from colorama import Fore, Style  # test
 
 shop = Blueprint('shop', __name__, template_folder='templates')
+
+
+def role_req(role_name):
+    role_require_id = Role.query.filter_by(name=role_name).first().id
+    return role_require_id
+
+
+def current_role():
+    current_role_id = UserRoles.query.filter_by(user_id=current_user.id).first().role_id
+    return current_role_id
 
 
 @shop.route('/')
@@ -64,18 +73,24 @@ def logout():
 @shop.route('/users/ <username>')
 @login_required
 def users(username=None):
-    users_list = db.session.query(User).all()
-    if username is not None:
-        profile = User.query.filter_by(username=username).first_or_404()
-        role_temp_id = UserRoles.query.filter_by(user_id=profile.id).first().role_id
-        role_name = Role.query.filter_by(id=role_temp_id).first().name
-        print("ROLES", role_name)
-        print('Profile', profile)
-        return render_template("user.html", username=username, profile=profile, role=role_name)
-    return render_template("users.html", users_list=users_list)
+    if current_role() == role_req('guest') or role_req('admin'):
+        users_list = db.session.query(User).all()
+        if username is not None:
+            profile = User.query.filter_by(username=username).first_or_404()
+            role_temp_id = UserRoles.query.filter_by(user_id=profile.id).first().role_id
+            role_name = Role.query.filter_by(id=role_temp_id).first().name
+            print("ROLES", role_name)
+            print('Profile', profile)
+            return render_template("user.html", username=username, profile=profile, role=role_name)
+        return render_template("users.html", users_list=users_list, current_role=current_role(),
+                               role_req=role_req('admin'))
+    else:
+        flash("You do not have admin access", 'error')
+        return render_template("home.html")
 
 
 @shop.route('/role/<username>', methods=['GET', 'POST'])
+@login_required
 def role(username):
     get_role_name = request.form.get("role")
     get_role_id = Role.query.filter_by(name=get_role_name).first().id
@@ -83,7 +98,7 @@ def role(username):
     user_id = User.query.filter_by(username=username).first().id
     db.session.query(UserRoles).filter(UserRoles.user_id == user_id).update({'role_id': get_role_id})
     db.session.commit()
-    flash('Role has been changed',  'success')
+    flash('\nRole has been changed',  'success')
     return redirect(url_for('shop.users'))
 
 
@@ -96,7 +111,11 @@ def products():
 @shop.route('/remove')
 @login_required
 def remove():
-    return render_template("delete.html")
+    if current_role() == role_req('admin'):
+        return render_template("delete.html")
+    else:
+        flash("You do not have admin access", 'error')
+        return redirect(url_for('shop.home'))
 
 
 @shop.route('/add', methods=['POST'])
@@ -134,7 +153,6 @@ def delete():
 
 @shop.route('/list', methods=['GET'])
 def shop_list():
-
     products_list = db.session.query(Product).all()
     products_name = db.session.query(Product.name).all()
     products_name = ([x[0] for x in products_name])
@@ -147,5 +165,4 @@ def shop_list():
     if not products_name:
         flash('Product list is empty, add product to list', 'info')
     return render_template("shop_list.html", products_list=products_list,
-                           products_name=products_name, products_price=products_price,
-                           products_id=products_id)
+                           products_name=products_name, products_price=products_price, products_id=products_id)

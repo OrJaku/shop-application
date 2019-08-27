@@ -25,11 +25,11 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(128), unique=False, nullable=False)
     last_name = db.Column(db.String(128), unique=False, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    role = db.relationship('Role', secondary='user_roles')
+    role = db.relationship('Role', secondary='user_roles', backref=db.backref('user', lazy='dynamic'))
 
     @property
     def password(self):
-        raise AttributeError("Attribute Error no.1")
+        raise AttributeError("Attribute password error")
 
     @password.setter
     def password(self, password):
@@ -37,6 +37,10 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    # def has_role(self, current_user):
+    #     profile_role_id = UserRoles.query.filter_by(user_id=current_user.id).first().role_id
+    #     return profile_role_id
 
     def __repr__(self):
         return f'{self.username}'

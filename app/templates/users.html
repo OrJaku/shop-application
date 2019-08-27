@@ -4,9 +4,15 @@
 {% block page %}
 <body id="users">
     <ul id="usersbar">
-        {% for item in users_list %}
-        <li> <a href="{{ url_for('shop.users',username=item)}}" >{{ item }}</a> </li>
-        {% endfor %}
+        {% if current_role == role_req %}
+            {% for item in users_list %}
+            <li> <a href="{{ url_for('shop.users',username=item)}}" >{{ item }}</a> </li>
+            {% endfor %}
+        {% else %}
+            {% for item in users_list %}
+            <li> {{ item }} </li>
+            {% endfor %}
+        {% endif %}
     </ul><br>
 </body>
 

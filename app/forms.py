@@ -23,7 +23,6 @@ class RegisterForm(FlaskForm):
             raise ValidationError('This email exist, please use different email address')
 
 
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
