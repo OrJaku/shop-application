@@ -1,0 +1,15 @@
+{% extends "body.html" %}
+{% block title %}{{ profile }}{% endblock%}
+{% block h1 %}Welcome <i>{{ profile }}</i>{% endblock%}
+{% block page %}
+ <body id="profile">
+    <ul>
+        <li>Username: <b>{{ profile }}</b> </li>
+        <li>First name: <b>{{ profile.first_name }}</b> </li>
+        <li>Last name: <b>{{ profile.last_name }}</b> </li>
+        <li>Email: <b>{{ profile.email }}</b> </li>
+    </ul>
+    <a href="{{ url_for('shop.change_password')}}" id="changepass">Change password</a>
+ </body>
+
+{% endblock %}

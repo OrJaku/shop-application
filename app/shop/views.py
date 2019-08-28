@@ -1,7 +1,7 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, ChangePasswordForm
 from ..models import Product, User, Role, UserRoles
 from colorama import Fore, Style  # test
 
@@ -76,12 +76,12 @@ def users(username=None):
     if current_role() == role_req('guest') or role_req('admin'):
         users_list = db.session.query(User).all()
         if username is not None:
-            profile = User.query.filter_by(username=username).first_or_404()
-            role_temp_id = UserRoles.query.filter_by(user_id=profile.id).first().role_id
+            user = User.query.filter_by(username=username).first_or_404()
+            role_temp_id = UserRoles.query.filter_by(user_id=user.id).first().role_id
             role_name = Role.query.filter_by(id=role_temp_id).first().name
             print("ROLES", role_name)
-            print('Profile', profile)
-            return render_template("user.html", username=username, profile=profile, role=role_name)
+            print('Profile', user)
+            return render_template("user.html", username=username, user=user, role=role_name)
         return render_template("users.html", users_list=users_list, current_role=current_role(),
                                role_req=role_req('admin'))
     else:
@@ -102,6 +102,45 @@ def role(username):
     return redirect(url_for('shop.users'))
 
 
+@shop.route('/profile',  methods=['GET', 'POST'])
+@shop.route('/profile/<username>')
+@login_required
+def profile(username):
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    print("PASS_HASH:", current_user.password_hash)
+    return render_template('profile.html', profile=user)
+
+
+@shop.route('/change_password',  methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    return render_template('changepass.html', form=form)
+
+###########################################################################################
+@shop.route('/changing',  methods=['GET', 'POST'])
+@login_required
+def changing():
+    form = ChangePasswordForm()
+    old_password = form.old_password.data
+    new_password = form.new_password.data
+    confirm_password = form.conf_password.data
+    user = User.query.filter_by(username=current_user.username).first()
+    check_password = user.check_password(old_password)
+    print(' New pass:', new_password, '\n', 'Confirmed pass:', confirm_password, '\n', 'Compered:', check_password)
+    if check_password is True:
+        if new_password != confirm_password:
+            flash('New password and confirm password need to be the same', 'error')
+        else:
+            user.password = new_password
+            db.session.add(user)
+            db.session.commit()
+            flash('Password has been changed', 'success')
+    elif check_password is False:
+        flash('Old  password is wrong', 'error')
+    return render_template('profile.html', form=form, profile=current_user)
+
+##########################################################################################
 @shop.route('/products')
 @login_required
 def products():

@@ -1,0 +1,23 @@
+{% extends "body.html" %}
+{% block title %}Change password{% endblock%}
+{% block h1 %}Change password{% endblock%}
+{% block page %}
+<body id="change_password">
+    <form method="post" action="{{ url_for('shop.changing') }}">
+         {{ form.hidden_tag() }}
+        <p>
+            {{form.old_password.label}}<br>
+            {{form.old_password(size=32) }}<br>
+        </p>
+        <p>
+            {{form.new_password.label}}<br>
+            {{form.new_password (size=32) }}<br>
+        </p>
+        <p>
+            {{form.conf_password.label}}<br>
+            {{form.conf_password (size=32) }}<br>
+        </p>
+        <p>{{ form.submit() }}</p><br>
+    </form>
+</body>
+{% endblock %}

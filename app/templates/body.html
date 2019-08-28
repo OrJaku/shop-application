@@ -9,6 +9,9 @@
   <div id="menu" class="cb">
     <ul id="navibar">
         <li><a href="{{ url_for('shop.home') }}" id="home">Home</a></li>
+        {% if current_user.is_authenticated %}
+        <li><a href="{{ url_for('shop.profile',username=current_user)}}" id="profile">Profile</a></li>
+        {% endif %}
         <li><a href="{{ url_for('shop.shop_list') }}" id="shop_list" >List</a></li>
         <li><a href="{{ url_for('shop.users') }}" id="users">Users List</a></li>
         <li><a href="{{ url_for('shop.products') }}" id="products" >Add products</a></li>

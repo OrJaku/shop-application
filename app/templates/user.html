@@ -1,17 +1,17 @@
 {% extends "body.html" %}
 {% block title %}{{ username }}{% endblock%}
-{% block h1 %}Welcome <i>{{username}}</i>{% endblock%}
+{% block h1 %}User: <i>{{username}}</i>{% endblock%}
 {% block page %}
  <body id="user">
     <ul>
-        <li>Username: <b>{{ profile }}</b> </li>
-        <li>ID: <b>{{ profile.id }}</b> </li>
-        <li>First name: <b>{{ profile.first_name }}</b> </li>
-        <li>Last name: <b>{{ profile.last_name }}</b> </li>
-        <li>Email: <b>{{ profile.email }}</b> </li>
+        <li>Username: <b>{{ user }}</b> </li>
+        <li>ID: <b>{{ user.id }}</b> </li>
+        <li>First name: <b>{{ user.first_name }}</b> </li>
+        <li>Last name: <b>{{ user.last_name }}</b> </li>
+        <li>Email: <b>{{ user.email }}</b> </li>
         <li>Role: <b>{{ role }}</b> </li>
     </ul>
-            <form class="add-form" method="POST" action="{{ url_for('shop.role', username=profile)}}">
+            <form class="add-form" method="POST" action="{{ url_for('shop.role', username=user)}}">
             <select  class="form-control" name="role" id="role">
                 <option value='guest'>guest </option>
                 <option value='admin'>admin </option>
