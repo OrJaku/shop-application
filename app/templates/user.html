@@ -12,12 +12,13 @@
         <li>Role: <b>{{ role }}</b> </li>
     </ul>
             <form class="add-form" method="POST" action="{{ url_for('shop.role', username=user)}}">
-            <select  class="form-control" name="role" id="role">
+            <select class="form-control" name="role" id="role">
                 <option value='guest'>guest </option>
                 <option value='admin'>admin </option>
             </select>
                 <button type="submit">Save</button>
             </form>
+
 
  </body>
 

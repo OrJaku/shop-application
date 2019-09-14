@@ -81,7 +81,7 @@ def users(username=None):
             role_name = Role.query.filter_by(id=role_temp_id).first().name
             print("ROLES", role_name)
             print('Profile', user)
-            return render_template("user.html", username=username, user=user, role=role_name)
+            return render_template("user.html", username=username, user=user, role=role_name, current_role=current_role(), role_req=role_req('admin'))
         return render_template("users.html", users_list=users_list, current_role=current_role(),
                                role_req=role_req('admin'))
     else:
@@ -107,7 +107,6 @@ def role(username):
 @login_required
 def profile(username):
     user = User.query.filter_by(username=current_user.username).first_or_404()
-    print("PASS_HASH:", current_user.password_hash)
     return render_template('profile.html', profile=user)
 
 
@@ -117,7 +116,7 @@ def change_password():
     form = ChangePasswordForm()
     return render_template('changepass.html', form=form)
 
-###########################################################################################
+
 @shop.route('/changing',  methods=['GET', 'POST'])
 @login_required
 def changing():
@@ -140,7 +139,22 @@ def changing():
         flash('Old  password is wrong', 'error')
     return render_template('profile.html', form=form, profile=current_user)
 
-##########################################################################################
+
+@shop.route('/remove_user', methods=['POST'])
+@login_required
+def remove_user():
+    get_user = request.form['username']
+    user_list = db.session.query(User.username).all()
+    user_list = ([x[0] for x in user_list])
+    print("user list", user_list)
+    if get_user == 'admin' or get_user not in user_list:
+        flash('Invalid user', 'error')
+    else:
+        User.query.filter_by(username=get_user).delete()
+        db.session.commit()
+    return redirect(url_for('shop.users'))
+
+
 @shop.route('/products')
 @login_required
 def products():

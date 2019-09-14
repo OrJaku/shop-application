@@ -68,8 +68,10 @@ width: 80%; margin: 2em 2em 2em 2em; }
 button {
   background-color: silver;
   color: black;
-  padding: 10px 30px;
+  padding: 8px 25px;
   font: 1em arial, sans-serif;
+  margin-top: 8px
+
 }
 button#add:hover {
 color: green;
@@ -82,14 +84,16 @@ background: #DCDCDC;
 border: 1px solid red;
 }
 
+
+label {
+color: #696969;
+}
+
 /* Input bars */
 input {
 color: black;
 background: #F0F0F0;
   padding: 3px 0px;
-}
-label {
-color: #696969;
 }
 
 /* Flash message */
