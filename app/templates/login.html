@@ -1,25 +1,24 @@
 {% extends "body.html" %}
-{% block title %}Login{% endblock%}
-{% block h1 %}Login{% endblock%}
 {% block page %}
-
 <body id="login">
-    <form action="" method="post" novalidate>
-         {{ form.hidden_tag() }}
-        <p>
-            {{form.username.label}}<br>
-            {{form.username(size=32) }}<br>
-        </p>
-        <p>
-            {{form.password.label}}<br>
-            {{form.password (size=32) }}<br>
-        </p>
-        <p>{{ form.submit() }}</p><br>
-
-    </form>
-    <ul>
-            <li><a href="{{ url_for('shop.register') }}" id="users">Registration</a></li>
-    </ul><br><br>
+    <div class="loginDiv">
+        <h1>Login</h1>
+         <form action="" method="post" novalidate>
+             {{ form.hidden_tag() }}
+            <p>
+                {{form.username.label}}<br>
+                {{form.username(size=32) }}<br>
+            </p>
+            <p>
+                {{form.password.label}}<br>
+                {{form.password (size=32) }}<br>
+            </p>
+            <p>{{ form.submit() }}</p><br>
+        </form>
+            <ul>
+                <li><a href="{{ url_for('shop.register') }}" id="users">Registration</a></li>
+            </ul><br><br>
+    </div>
 </body>
 
 {% endblock %}

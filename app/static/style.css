@@ -48,9 +48,7 @@ padding-top: 0.1em;
 padding-bottom: 4em;
 }
 body#home a#home,
-body#products a#products,
 body#shop_list a#shop_list,
-body#remove a#remove,
 body#logout a#logout,
 body#login a#login,
 body#users a#users,
@@ -112,4 +110,26 @@ font-weight: bold;
 color: Green;
 margin-top: 0.1em;
 font-weight: bold;
+}
+
+/*Div*/
+.loginDiv {
+background-color:#F5F5F5;
+margin-top: 1em; margin-bottom: 5px; margin-left: 6em; margin-right: 40em;
+border-style: groove;
+border-radius: 15px;
+border-width: 4px;
+border-color:  #33C4FF;
+font-size: 16px;
+font-family: Avantgarde,  sans-serif;
+}
+
+.loginDiv h1 {
+font-size: 20px;
+color: gray;
+}
+
+.loginDiv input {
+border-radius: 5px;
+
 }

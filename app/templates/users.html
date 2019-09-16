@@ -10,8 +10,8 @@
                 {% endfor %}<br><br>
             </ul>
         <form class="rem-form" method="POST" action="{{ url_for('shop.remove_user') }}">
-            <label >User to remove<br> <input name="username" value=""/></label>
-            <button  type="submit">Delete</button>
+            <input name="username" placeholder="User to remove"/>
+            <button id="rem"  type="submit">Delete</button>
         </form>
         {% else %}
 
@@ -25,4 +25,3 @@
 </body>
 
 {% endblock %}
-

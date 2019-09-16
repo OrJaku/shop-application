@@ -155,22 +155,6 @@ def remove_user():
     return redirect(url_for('shop.users'))
 
 
-@shop.route('/products')
-@login_required
-def products():
-    return render_template("products.html")
-
-
-@shop.route('/remove')
-@login_required
-def remove():
-    if current_role() == role_req('admin'):
-        return render_template("delete.html")
-    else:
-        flash("You do not have admin access", 'error')
-        return redirect(url_for('shop.home'))
-
-
 @shop.route('/add', methods=['POST'])
 def add():
     product_name = request.form['pr_name']
@@ -182,7 +166,7 @@ def add():
         db.session.add(new_product)
         flash('Product %s (price: %s) has been added' % (product_name, product_price), 'success')
         db.session.commit()
-    return redirect(url_for('shop.products'))
+    return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/delete', methods=['POST'])
@@ -201,7 +185,7 @@ def delete():
             db.session.commit()
         else:
             flash('Product %s is not on list' % product_remove, 'error')
-    return redirect(url_for('shop.remove'))
+    return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/list', methods=['GET'])
@@ -217,5 +201,10 @@ def shop_list():
     print(Style.RESET_ALL)  # test
     if not products_name:
         flash('Product list is empty, add product to list', 'info')
-    return render_template("shop_list.html", products_list=products_list,
-                           products_name=products_name, products_price=products_price, products_id=products_id)
+    if current_user.is_authenticated:
+        return render_template("shop_list.html", products_list=products_list,
+                               products_name=products_name, products_price=products_price, products_id=products_id,
+                               current_role=current_role(), role_req=role_req('admin'))
+    else:
+        return render_template("shop_list.html", products_list=products_list,
+                               products_name=products_name, products_price=products_price, products_id=products_id)
