@@ -14,12 +14,12 @@
         <tr>
            <td>
                {% for item in products_name %}
-                  <p> {{ item }}</p>
+                  <p> <a href="{{ url_for('shop.shop_list',product=item)}}" >{{ item }}</a></p>
                {% endfor %}
            </td>
             <td>
                {% for item in products_price %}
-                <p> {{ item }}</p>
+                <p>{{ item }}</p>
                {% endfor %}
            </td>
             <td>

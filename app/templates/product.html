@@ -1,0 +1,13 @@
+{% extends "body.html" %}
+{% block title %}{{ product }}{% endblock%}
+{% block h1 %}Product: <i>{{product.name}}</i>{% endblock%}
+{% block page %}
+ <body id="product">
+    <ul>
+        <li>Product name: <b>{{ product.name }}</b> </li>
+        <li>Price: <b>{{ product.price }}</b> </li>
+        <li>ID: <b>{{ product.id }}</b> </li>
+    </ul>
+ </body>
+
+{% endblock %}

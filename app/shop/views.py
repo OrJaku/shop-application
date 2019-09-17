@@ -81,7 +81,8 @@ def users(username=None):
             role_name = Role.query.filter_by(id=role_temp_id).first().name
             print("ROLES", role_name)
             print('Profile', user)
-            return render_template("user.html", username=username, user=user, role=role_name, current_role=current_role(), role_req=role_req('admin'))
+            return render_template("user.html", username=username, user=user, role=role_name,
+                                   current_role=current_role(), role_req=role_req('admin'))
         return render_template("users.html", users_list=users_list, current_role=current_role(),
                                role_req=role_req('admin'))
     else:
@@ -188,23 +189,28 @@ def delete():
     return redirect(url_for('shop.shop_list'))
 
 
-@shop.route('/list', methods=['GET'])
-def shop_list():
-    products_list = db.session.query(Product).all()
-    products_name = db.session.query(Product.name).all()
-    products_name = ([x[0] for x in products_name])
-    products_price = db.session.query(Product.price).all()
-    products_price = ([x[0] for x in products_price])
-    products_id = db.session.query(Product.id).all()
-    products_id = ([x[0] for x in products_id])
-    print(Fore.YELLOW + 'PR_Name', products_name)  # test#
-    print(Style.RESET_ALL)  # test
-    if not products_name:
-        flash('Product list is empty, add product to list', 'info')
-    if current_user.is_authenticated:
-        return render_template("shop_list.html", products_list=products_list,
-                               products_name=products_name, products_price=products_price, products_id=products_id,
-                               current_role=current_role(), role_req=role_req('admin'))
+@shop.route('/list', methods=['GET', 'POST'])
+@shop.route('/list/<product>')
+def shop_list(product=None):
+    if product is None:
+        products_list = db.session.query(Product).all()
+        products_name = db.session.query(Product.name).all()
+        products_name = ([x[0] for x in products_name])
+        products_price = db.session.query(Product.price).all()
+        products_price = ([x[0] for x in products_price])
+        products_id = db.session.query(Product.id).all()
+        products_id = ([x[0] for x in products_id])
+        print(Fore.YELLOW + 'PR_Name', products_name)  # test#
+        print(Style.RESET_ALL)  # test
+        if not products_name:
+            flash('Product list is empty', 'info')
+        if current_user.is_authenticated:
+            return render_template("shop_list.html", products_list=products_list,
+                                   products_name=products_name, products_price=products_price, products_id=products_id,
+                                   current_role=current_role(), role_req=role_req('admin'))
+        else:
+            return render_template("shop_list.html", products_list=products_list,
+                                   products_name=products_name, products_price=products_price, products_id=products_id)
     else:
-        return render_template("shop_list.html", products_list=products_list,
-                               products_name=products_name, products_price=products_price, products_id=products_id)
+        prod = Product.query.filter_by(name=product).first()
+        return render_template('product.html', product=prod)
