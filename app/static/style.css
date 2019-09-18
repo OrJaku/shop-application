@@ -4,15 +4,16 @@ h2 { margin-left: 20px; font-size: 20px }
 p { margin-left: 10px; margin-right: 20px;, font: 1em arial,sans-serif; }
 
 /* Table */
-th { border: 3px solid #333; }
-td { border: 2px solid #333; }
+th { border: 1px solid; ;color:black}
+td { border: 1px solid; }
 #table p {
 color: black;
 margin-top: 5px; margin-bottom: 5px; margin-left: 10px; margin-right: 10px;
 text-align: center;
 }
 #table th {
-background-color: silver;
+background-color: #F5F5F5;
+
 }
 
 /* Menu bars */
@@ -132,4 +133,9 @@ color: gray;
 .loginDiv input {
 border-radius: 5px;
 
+}
+
+input#description {
+border-radius: 5px;
+width: 300px
 }

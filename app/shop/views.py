@@ -103,8 +103,7 @@ def role(username):
     return redirect(url_for('shop.users'))
 
 
-@shop.route('/profile',  methods=['GET', 'POST'])
-@shop.route('/profile/<username>')
+@shop.route('/profile/<username>', methods=['GET', 'POST'])
 @login_required
 def profile(username):
     user = User.query.filter_by(username=current_user.username).first_or_404()
@@ -212,5 +211,23 @@ def shop_list(product=None):
             return render_template("shop_list.html", products_list=products_list,
                                    products_name=products_name, products_price=products_price, products_id=products_id)
     else:
-        prod = Product.query.filter_by(name=product).first()
-        return render_template('product.html', product=prod)
+        product = Product.query.filter_by(name=product).first()
+        if current_user.is_authenticated:
+            return render_template('product.html', product=product, current_role=current_role(),
+                                   role_req=role_req('admin'))
+        else:
+            return render_template('product.html', product=product)
+
+
+@shop.route('/add_description/<product>', methods=['GET', 'POST'])
+def add_description(product):
+    new_description = request.form['description']
+    product = Product.query.filter_by(name=product).first()
+    print("New description", new_description)
+    product.description = new_description
+    db.session.add(product)
+    db.session.commit()
+    if current_user.is_authenticated:
+        return render_template('product.html', product=product, current_role=current_role(), role_req=role_req('admin'))
+    else:
+        return render_template('product.html', product=product)
