@@ -9,15 +9,16 @@
         <li>Description: <b>{{ product.description }}</b>
          {% if current_user.is_authenticated %}
             {% if current_role == role_req %}
-                <form class="add-form" method = "POST" action="{{ url_for('shop.add_description', product=product.name)}}">
+                <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">
                     <br><textarea rows="5" cols="50"  name="description" >{{product.description}}</textarea><br>
-                    <button type="submit" >Change description</button>
+                    <button id='select' name=product type="submit" value={{product.name}} >Change description</button>
+                </form>
+                <form class="rem-form" method = "POST" action="{{ url_for('shop.delete')}}">
+                    <button name=product value={{product.name}} id='rem' type="submit" >Remove product</button>
                 </form>
             {% endif %}
          {% endif %}
         </li>
-
     </ul>
  </body>
-
 {% endblock %}

@@ -33,13 +33,13 @@
     {% if current_user.is_authenticated %}
         {% if current_role == role_req %}
              <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
-                 <br> <input name="pr_name" placeholder="Product name"/>
-                 <br> <input name="pr_price" placeholder="Price"/><br>
+                 <br> <input name="product_name" placeholder="Product name"/>
+                 <br> <input name="product_price" placeholder="Price"/><br>
                  <button id="add" type="submit">Add</button>
              </form>
              <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
-                 <br> <input name="pr_name" placeholder="Product to remove"/><br>
-                 <button id="rem" type="submit">Delete</button><br><br><br>
+                 <br> <input name="product" placeholder="Product to remove"/><br>
+                 <button id="rem" value=type="submit">Delete</button><br><br><br>
              </form>
         {% endif %}
     {% endif %}

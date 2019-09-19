@@ -157,8 +157,8 @@ def remove_user():
 
 @shop.route('/add', methods=['POST'])
 def add():
-    product_name = request.form['pr_name']
-    product_price = request.form['pr_price']
+    product_name = request.form['product_name']
+    product_price = request.form['product_price']
     new_product = Product(name=product_name, price=product_price)
     if product_name == '' or product_price == '':
         flash('Enter product name and price', 'error')
@@ -171,7 +171,8 @@ def add():
 
 @shop.route('/delete', methods=['POST'])
 def delete():
-    product_remove = request.form['pr_name']
+    product_remove = request.form['product']
+    print('test1', product_remove)
     if product_remove == "del_all_prod":
         Product.query.filter().delete()
         db.session.commit()
@@ -219,9 +220,10 @@ def shop_list(product=None):
             return render_template('product.html', product=product)
 
 
-@shop.route('/add_description/<product>', methods=['GET', 'POST'])
-def add_description(product):
+@shop.route('/add_description/', methods=['GET', 'POST'])
+def add_description():
     new_description = request.form['description']
+    product = request.form['product']
     product = Product.query.filter_by(name=product).first()
     print("New description", new_description)
     product.description = new_description

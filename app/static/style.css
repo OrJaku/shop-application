@@ -82,6 +82,11 @@ color: red;
 background: #DCDCDC;
 border: 1px solid red;
 }
+button#select:hover {
+color: #3171DA;
+background: #DCDCDC;
+border: 1px solid #3171DA;
+}
 
 
 label {
