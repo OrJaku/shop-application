@@ -8,8 +8,8 @@ class Product(db.Model):
     __tablename__ = 'product'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    price = db.Column(db.Float())
+    name = db.Column(db.String(), nullable=False)
+    price = db.Column(db.Float(), nullable=False)
     description = db.Column(db.String())
 
     def __repr__(self):
@@ -55,6 +55,17 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+
+
+class Posts(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(100), unique=True, nullable=False)
+    post = db.Column(db.String(), nullable=False)
+    user = db.Column(db.String(), nullable=False)
+
+    def __repr__(self):
+        return f'{self.title} {self.post}'
 
 
 @login.user_loader

@@ -10,6 +10,12 @@
         <li>Email: <b>{{ profile.email }}</b> </li><br>
     </ul>
     <a href="{{ url_for('shop.change_password')}}" id="changepass">Change password</a>
+    <br><br><p><b>Your posts:</b></p>
+        {% for item in posts %}
+        <div class="post-form">
+            {{item}}<br><br>
+        </div>
+        {% endfor %}
  </body>
 
 {% endblock %}

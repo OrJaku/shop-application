@@ -14,7 +14,7 @@
                     <button id='select' name=product type="submit" value={{product.name}} >Change description</button>
                 </form>
                 <form class="rem-form" method = "POST" action="{{ url_for('shop.delete')}}">
-                    <button name=product value={{product.name}} id='rem' type="submit" >Remove product</button>
+                    <br><br><button name=product value={{product.name}} id='rem' type="submit" >Remove product</button>
                 </form>
             {% endif %}
          {% endif %}

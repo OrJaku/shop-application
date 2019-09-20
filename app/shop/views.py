@@ -2,7 +2,7 @@ from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, ChangePasswordForm
-from ..models import Product, User, Role, UserRoles
+from ..models import Product, User, Role, UserRoles, Posts
 from colorama import Fore, Style  # test
 
 shop = Blueprint('shop', __name__, template_folder='templates')
@@ -18,9 +18,23 @@ def current_role():
     return current_role_id
 
 
-@shop.route('/')
+@shop.route('/', methods=['GET'])
 def home():
-    return render_template("home.html")
+    title = db.session.query(Posts.title).all()
+    title = ([x[0] for x in title])
+    print("Titles", title)
+    posts_list = []
+    for item in title:
+        posts_list.append(item)
+    if not posts_list:
+        return render_template("home.html")
+    else:
+        page_title = posts_list[len(posts_list) - 1]
+        post = Posts.query.filter_by(title=page_title).first().post
+        title = Posts.query.filter_by(post=post).first().title
+        user = Posts.query.filter_by(post=post).first().user
+
+        return render_template("home.html", title=title, post=post, user=user)
 
 
 @shop.route('/register', methods=["POST", "GET"])
@@ -107,7 +121,13 @@ def role(username):
 @login_required
 def profile(username):
     user = User.query.filter_by(username=current_user.username).first_or_404()
-    return render_template('profile.html', profile=user)
+    check_user = db.session.query(Posts.user).all()
+    check_user = ([x[0] for x in check_user])
+    if current_user.username in check_user:
+        posts = Posts.query.filter_by(user=current_user.username).all()
+        return render_template('profile.html', profile=user, posts=posts)
+    else:
+        return render_template('profile.html', profile=user)
 
 
 @shop.route('/change_password',  methods=['GET', 'POST'])
@@ -126,7 +146,6 @@ def changing():
     confirm_password = form.conf_password.data
     user = User.query.filter_by(username=current_user.username).first()
     check_password = user.check_password(old_password)
-    print(' New pass:', new_password, '\n', 'Confirmed pass:', confirm_password, '\n', 'Compered:', check_password)
     if check_password is True:
         if new_password != confirm_password:
             flash('New password and confirm password need to be the same', 'error')
@@ -143,15 +162,16 @@ def changing():
 @shop.route('/remove_user', methods=['POST'])
 @login_required
 def remove_user():
-    get_user = request.form['username']
+    user = request.form['user']
     user_list = db.session.query(User.username).all()
     user_list = ([x[0] for x in user_list])
     print("user list", user_list)
-    if get_user == 'admin' or get_user not in user_list:
+    if user == 'admin' or user not in user_list:
         flash('Invalid user', 'error')
     else:
-        User.query.filter_by(username=get_user).delete()
+        User.query.filter_by(username=user).delete()
         db.session.commit()
+        flash(f'User: {user} has been removed', 'success')
     return redirect(url_for('shop.users'))
 
 
@@ -172,7 +192,6 @@ def add():
 @shop.route('/delete', methods=['POST'])
 def delete():
     product_remove = request.form['product']
-    print('test1', product_remove)
     if product_remove == "del_all_prod":
         Product.query.filter().delete()
         db.session.commit()
@@ -233,3 +252,17 @@ def add_description():
         return render_template('product.html', product=product, current_role=current_role(), role_req=role_req('admin'))
     else:
         return render_template('product.html', product=product)
+
+
+@shop.route('/add_post', methods=['POST'])
+def add_post():
+    title = request.form['title']
+    post = request.form['post']
+    if current_user.is_anonymous:
+        user = "Guest"
+    else:
+        user = current_user.username
+    new_post = Posts(title=title, post=post, user=user)
+    db.session.add(new_post)
+    db.session.commit()
+    return redirect(url_for('shop.home'))

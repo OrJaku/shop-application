@@ -18,8 +18,8 @@
             </select>
                 <button id='select' type="submit">Save</button>
             </form>
-
-
+            <form class="rem-form" method = "POST" action="{{ url_for('shop.remove_user')}}">
+                <br><br><button name=user value={{username}} id='rem' type="submit" >Remove user</button>
+            </form>
  </body>
-
 {% endblock %}

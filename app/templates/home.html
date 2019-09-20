@@ -3,6 +3,27 @@
 {% block h1 %}Home{% endblock%}
 {% block page %}
     <body id="home">
-       Shop application<br>Home page
+       Shop application<br>Home page <br><br>
+       <form class="post-form" method = "GET" action="{{ url_for('shop.home')}}">
+           <div class="main_post">
+               <p><b>{{title}}</b></p>
+               <p>{{post}}</p>
+               <p class="author"><i>Author: <b>{{user}}</b></i></p>
+           </div>
+<!--           <div class="posts">-->
+<!--               {% for title, post, user in posts_second %}-->
+<!--               <p>{{title}}</p>-->
+<!--               <p>{{post}}</p>-->
+<!--               <p class="author"><i>Author: <b>{{user}}</b></i></p>-->
+<!--               {% endfor %}-->
+<!--           </div>-->
+       </form>
+     <form class="add-form" method = "POST" action="{{ url_for('shop.add_post')}}">
+         <br><textarea rows="1" cols="70"  name="title" placeholder="Title"></textarea>
+         <br><textarea rows="8" cols="70"  name="post" placeholder="Put text here..."></textarea><br>
+         <button id='add' name=post type="submit" value= >Add new post</button>
+     </form>
+
+
     </body>
 {% endblock %}

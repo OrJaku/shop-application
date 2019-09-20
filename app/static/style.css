@@ -144,3 +144,19 @@ input#description {
 border-radius: 5px;
 width: 300px
 }
+
+/*Post*/
+.post-form {
+border-style: groove;
+border-radius: 10px;
+border-width: 2px;
+border-color: #B4C1EA;
+background-color: #F3F2F5;
+width: 500px;
+}
+
+.author {
+font-color: gray;
+font-size: 15px;
+text-align: right;
+}
