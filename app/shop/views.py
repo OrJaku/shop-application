@@ -22,19 +22,49 @@ def current_role():
 def home():
     title = db.session.query(Posts.title).all()
     title = ([x[0] for x in title])
-    print("Titles", title)
+    # print("Titles", title)
     posts_list = []
     for item in title:
         posts_list.append(item)
     if not posts_list:
         return render_template("home.html")
+    elif len(posts_list) == 1:
+        page_post = posts_list[0]
     else:
-        page_title = posts_list[len(posts_list) - 1]
-        post = Posts.query.filter_by(title=page_title).first().post
-        title = Posts.query.filter_by(post=post).first().title
-        user = Posts.query.filter_by(post=post).first().user
-
+        page_post = posts_list[len(posts_list) - 1]
+    post = Posts.query.filter_by(title=page_post).first().post
+    title = Posts.query.filter_by(post=post).first().title
+    user = Posts.query.filter_by(post=post).first().user
+    list_post2 = []
+    list_title2 = []
+    list_user2 = []
+    i = 0
+    if len(posts_list) == 0 or len(posts_list) == 1:
         return render_template("home.html", title=title, post=post, user=user)
+    elif len(posts_list) == 2:
+        page_post2 = posts_list[0]
+        post2 = Posts.query.filter_by(title=page_post2).first().post
+        title2 = Posts.query.filter_by(post=post2).first().title
+        user2 = Posts.query.filter_by(post=post2).first().user
+        list_post2.append(post2)
+        list_title2.append(title2)
+        list_user2.append(user2)
+        list_join = zip(list_title2, list_post2, list_user2)
+    else:
+        while i != len(posts_list) - 1:
+            i += 1
+            page_post2 = posts_list[len(posts_list) - (i+1)]
+            post2 = Posts.query.filter_by(title=page_post2).first().post
+            title2 = Posts.query.filter_by(post=post2).first().title
+            user2 = Posts.query.filter_by(post=post2).first().user
+            list_post2.append(post2)
+            list_title2.append(title2)
+            list_user2.append(user2)
+        list_join = zip(list_title2, list_post2, list_user2)
+
+    return render_template("home.html", title=title, post=post, user=user,
+                           list_post2=list_post2, list_title2=list_title2, list_user2=list_user2,
+                           list_join=list_join)
 
 
 @shop.route('/register', methods=["POST", "GET"])
@@ -109,7 +139,7 @@ def users(username=None):
 def role(username):
     get_role_name = request.form.get("role")
     get_role_id = Role.query.filter_by(name=get_role_name).first().id
-    print('Get role', get_role_id, get_role_name)
+    # print('Get role', get_role_id, get_role_name)
     user_id = User.query.filter_by(username=username).first().id
     db.session.query(UserRoles).filter(UserRoles.user_id == user_id).update({'role_id': get_role_id})
     db.session.commit()
@@ -244,7 +274,7 @@ def add_description():
     new_description = request.form['description']
     product = request.form['product']
     product = Product.query.filter_by(name=product).first()
-    print("New description", new_description)
+    # print("New description", new_description)
     product.description = new_description
     db.session.add(product)
     db.session.commit()
@@ -256,8 +286,19 @@ def add_description():
 
 @shop.route('/add_post', methods=['POST'])
 def add_post():
+    title_list = db.session.query(Posts.title).all()
+    title_list = ([x[0] for x in title_list])
     title = request.form['title']
+    if not title:
+        flash("You have to add title", 'error')
+        return redirect(url_for('shop.home'))
+    elif title in title_list:
+        flash("Post with the same title does exist", 'error')
+        return redirect(url_for('shop.home'))
     post = request.form['post']
+    if not post:
+        flash("You have to add some text", 'error')
+        return redirect(url_for('shop.home'))
     if current_user.is_anonymous:
         user = "Guest"
     else:
@@ -266,3 +307,17 @@ def add_post():
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for('shop.home'))
+
+
+@shop.route('/remove_post', methods=['POST'])
+def remove_post():
+    post = request.form['remove_post']
+    if post == "remove_all":
+        Posts.query.filter().delete()
+        db.session.commit()
+        return redirect(url_for('shop.home'))
+    else:
+        Posts.query.filter_by(post=post).delete()
+        db.session.commit()
+        flash(f'Post: {post} has been removed', 'success')
+        return redirect(url_for('shop.home'))

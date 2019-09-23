@@ -1,29 +1,33 @@
 {% extends "body.html" %}
 {% block title %}Home{% endblock%}
-{% block h1 %}Home{% endblock%}
+{% block h1 %} Shop application{% endblock%}
 {% block page %}
     <body id="home">
-       Shop application<br>Home page <br><br>
+      <br>
        <form class="post-form" method = "GET" action="{{ url_for('shop.home')}}">
            <div class="main_post">
-               <p><b>{{title}}</b></p>
+               <p><b> <input type="checkbox" name="checkbox_m" value={{title}}> {{title}}<br></b></p>
                <p>{{post}}</p>
                <p class="author"><i>Author: <b>{{user}}</b></i></p>
            </div>
-<!--           <div class="posts">-->
-<!--               {% for title, post, user in posts_second %}-->
-<!--               <p>{{title}}</p>-->
-<!--               <p>{{post}}</p>-->
-<!--               <p class="author"><i>Author: <b>{{user}}</b></i></p>-->
-<!--               {% endfor %}-->
-<!--           </div>-->
+            {% for title, post, user in list_join %}
+               <div class="posts">
+                   <p><b>{{title}}</b></p>
+                   <p>{{post}}</p>
+                   <p class="author"><i>Author: <b>{{user}}</b></i></p>
+               </div>
+           {% endfor %}
        </form>
+      <div class="add_post">
      <form class="add-form" method = "POST" action="{{ url_for('shop.add_post')}}">
          <br><textarea rows="1" cols="70"  name="title" placeholder="Title"></textarea>
          <br><textarea rows="8" cols="70"  name="post" placeholder="Put text here..."></textarea><br>
          <button id='add' name=post type="submit" value= >Add new post</button>
      </form>
-
-
+    <form class="rem-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
+         <button id='rem' name='remove_post' type="submit" value=checkbox_m >Remove post</button>
+        `<button  name='remove_post' type="submit" value="remove_all" >Remove all</button>
+     </form>
+      </div>
     </body>
 {% endblock %}

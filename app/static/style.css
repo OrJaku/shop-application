@@ -146,7 +146,8 @@ width: 300px
 }
 
 /*Post*/
-.post-form {
+
+.main_post {
 border-style: groove;
 border-radius: 10px;
 border-width: 2px;
@@ -155,6 +156,14 @@ background-color: #F3F2F5;
 width: 500px;
 }
 
+.posts {
+border-style: groove;
+border-radius: 10px;
+border-width: 1px;
+border-color: #B4C1EA;
+background-color: #F3FDF5;
+width: 450px;
+}
 .author {
 font-color: gray;
 font-size: 15px;

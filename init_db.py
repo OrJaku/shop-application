@@ -1,12 +1,16 @@
 import os
 from app import db, create_app
 from app.models import Role, User
+
+from flask_migrate import Migrate
+
 config_shop = os.getenv('development')
 app = create_app(config_shop)
 
 
 with app.app_context():
     print("\nDropping tables")
+    migrate = Migrate(app, db)
     db.drop_all()
     print("Creating tables")
     db.create_all()
