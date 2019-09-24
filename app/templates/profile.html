@@ -7,15 +7,21 @@
         <li>Username: <b>{{ profile }}</b> </li>
         <li>First name: <b>{{ profile.first_name }}</b> </li>
         <li>Last name: <b>{{ profile.last_name }}</b> </li>
-        <li>Email: <b>{{ profile.email }}</b> </li><br>
+        <li>Email: <b>{{ profile.email }}</b> </li>
+        <br>
     </ul>
     <a href="{{ url_for('shop.change_password')}}" id="changepass">Change password</a>
     <br><br><p><b>Your posts:</b></p>
-        {% for item in posts %}
+    <form  class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
+        {% for post in posts %}
         <div class="posts">
-            {{item}}<br><br>
+            <p><b>{{post.title}}</b><input type="checkbox" name="remove_post" value={{post.id}}></p>
+            <p>{{post.post}}</p>
+            <p>{{post.user}}</p>
         </div>
         {% endfor %}
+        <br>
+        <button  type="submit">Remove post</button>
+    </form>
  </body>
-
 {% endblock %}

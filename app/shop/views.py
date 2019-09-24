@@ -35,11 +35,11 @@ def home():
     post = Posts.query.filter_by(title=page_post).first().post
     title = Posts.query.filter_by(post=post).first().title
     user = Posts.query.filter_by(post=post).first().user
+    post_id = Posts.query.filter_by(post=post).first().id
     posts_list2 = []
     i = 0
-
     if len(posts_list) == 0 or len(posts_list) == 1:
-        return render_template("home.html", title=title, post=post, user=user)
+        return render_template("home.html", title=title, post=post, user=user, post_id=post_id)
     elif len(posts_list) == 2:
         page_post2 = posts_list[0]
         post2 = Posts.query.filter_by(title=page_post2).first()
@@ -50,8 +50,7 @@ def home():
             page_post2 = posts_list[len(posts_list) - (i+1)]
             post2 = Posts.query.filter_by(title=page_post2).first()
             posts_list2.append(post2)
-
-    return render_template("home.html", title=title, post=post, user=user, posts_list2=posts_list2)
+    return render_template("home.html", title=title, post=post, user=user, post_id=post_id, posts_list2=posts_list2)
 
 
 @shop.route('/register', methods=["POST", "GET"])
@@ -299,19 +298,34 @@ def add_post():
 @shop.route('/remove_post', methods=['GET', 'POST'])
 @login_required
 def remove_post():
+    rem_post = request.form.getlist("remove_post")
+    user = User.query.filter_by(username=current_user.username).first().username
+    post_user = Posts.query.filter_by(user=current_user.username).first()
+    print("TEST")
+    print("user:", user)
+    print("post_user", post_user)
+    print("curr", current_user)
     if current_role() == role_req('admin'):
         if request.method == "POST":
-            rem_post = request.form.getlist("remove_post")
-            if 'all' in rem_post:
+            if 'all_posts_remove' in rem_post:
                 Posts.query.filter().delete()
                 db.session.commit()
             else:
                 print("Posts to remove:", rem_post)
                 for item in rem_post:
-                    Posts.query.filter_by(title=item).delete()
+                    Posts.query.filter_by(id=item).delete()
                     db.session.commit()
                 flash(f'Post: {rem_post} has been removed', 'success')
             return redirect(url_for('shop.home'))
+
+    elif user == post_user:
+
+        for item in rem_post:
+            Posts.query.filter_by(id=item).delete()
+            db.session.commit()
+        flash(f'Post: {rem_post} has been removed', 'success')
+        return redirect(url_for("shop.home"))
+
     else:
-        flash("You do not have admin access", 'error')
+        flash("You do not have access to remove this post", 'error')
         return redirect(url_for("shop.home"))
