@@ -35,36 +35,23 @@ def home():
     post = Posts.query.filter_by(title=page_post).first().post
     title = Posts.query.filter_by(post=post).first().title
     user = Posts.query.filter_by(post=post).first().user
-    list_post2 = []
-    list_title2 = []
-    list_user2 = []
+    posts_list2 = []
     i = 0
+
     if len(posts_list) == 0 or len(posts_list) == 1:
         return render_template("home.html", title=title, post=post, user=user)
     elif len(posts_list) == 2:
         page_post2 = posts_list[0]
-        post2 = Posts.query.filter_by(title=page_post2).first().post
-        title2 = Posts.query.filter_by(post=post2).first().title
-        user2 = Posts.query.filter_by(post=post2).first().user
-        list_post2.append(post2)
-        list_title2.append(title2)
-        list_user2.append(user2)
-        list_join = zip(list_title2, list_post2, list_user2)
+        post2 = Posts.query.filter_by(title=page_post2).first()
+        posts_list2.append(post2)
     else:
         while i != len(posts_list) - 1:
             i += 1
             page_post2 = posts_list[len(posts_list) - (i+1)]
-            post2 = Posts.query.filter_by(title=page_post2).first().post
-            title2 = Posts.query.filter_by(post=post2).first().title
-            user2 = Posts.query.filter_by(post=post2).first().user
-            list_post2.append(post2)
-            list_title2.append(title2)
-            list_user2.append(user2)
-        list_join = zip(list_title2, list_post2, list_user2)
+            post2 = Posts.query.filter_by(title=page_post2).first()
+            posts_list2.append(post2)
 
-    return render_template("home.html", title=title, post=post, user=user,
-                           list_post2=list_post2, list_title2=list_title2, list_user2=list_user2,
-                           list_join=list_join)
+    return render_template("home.html", title=title, post=post, user=user, posts_list2=posts_list2)
 
 
 @shop.route('/register', methods=["POST", "GET"])
@@ -309,15 +296,22 @@ def add_post():
     return redirect(url_for('shop.home'))
 
 
-@shop.route('/remove_post', methods=['POST'])
+@shop.route('/remove_post', methods=['GET', 'POST'])
+@login_required
 def remove_post():
-    post = request.form['remove_post']
-    if post == "remove_all":
-        Posts.query.filter().delete()
-        db.session.commit()
-        return redirect(url_for('shop.home'))
+    if current_role() == role_req('admin'):
+        if request.method == "POST":
+            rem_post = request.form.getlist("remove_post")
+            if 'all' in rem_post:
+                Posts.query.filter().delete()
+                db.session.commit()
+            else:
+                print("Posts to remove:", rem_post)
+                for item in rem_post:
+                    Posts.query.filter_by(title=item).delete()
+                    db.session.commit()
+                flash(f'Post: {rem_post} has been removed', 'success')
+            return redirect(url_for('shop.home'))
     else:
-        Posts.query.filter_by(post=post).delete()
-        db.session.commit()
-        flash(f'Post: {post} has been removed', 'success')
-        return redirect(url_for('shop.home'))
+        flash("You do not have admin access", 'error')
+        return redirect(url_for("shop.home"))

@@ -4,30 +4,37 @@
 {% block page %}
     <body id="home">
       <br>
-       <form class="post-form" method = "GET" action="{{ url_for('shop.home')}}">
+       <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
            <div class="main_post">
-               <p><b> <input type="checkbox" name="checkbox_m" value={{title}}> {{title}}<br></b></p>
+               <p><b>{{title}} </b>
+                   {% if current_user.is_authenticated %}
+                        <input type="checkbox" name='remove_post' value={{title}}></p>
+                    {% endif %}
                <p>{{post}}</p>
                <p class="author"><i>Author: <b>{{user}}</b></i></p>
            </div>
-            {% for title, post, user in list_join %}
-               <div class="posts">
-                   <p><b>{{title}}</b></p>
-                   <p>{{post}}</p>
-                   <p class="author"><i>Author: <b>{{user}}</b></i></p>
-               </div>
+            {% for item in posts_list2 %}
+           <div class="posts">
+                <p><b>{{item.title}}</b>
+                    {% if current_user.is_authenticated %}
+                        <input type="checkbox" name="remove_post" value={{item}} ></p>
+                    {% endif %}
+                <p>{{item.post}}</p>
+                <p class="author"><i>Author: <b>{{item.user}}</b></i></p>
+           </div>
            {% endfor %}
+           <label><input type="checkbox" name="remove_post" value="all">All</label>
        </form>
+
       <div class="add_post">
-     <form class="add-form" method = "POST" action="{{ url_for('shop.add_post')}}">
+     <form id = 'form2' class="add-form" method = "POST" action="{{ url_for('shop.add_post')}}">
          <br><textarea rows="1" cols="70"  name="title" placeholder="Title"></textarea>
          <br><textarea rows="8" cols="70"  name="post" placeholder="Put text here..."></textarea><br>
-         <button id='add' name=post type="submit" value= >Add new post</button>
-     </form>
-    <form class="rem-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
-         <button id='rem' name='remove_post' type="submit" value=checkbox_m >Remove post</button>
-        `<button  name='remove_post' type="submit" value="remove_all" >Remove all</button>
+         <button id='add' name=post type="submit"  >Add new post</button>
      </form>
       </div>
+          <form   class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
+              <button form=main_post type="submit">Remove post</button>
+          </form>
     </body>
 {% endblock %}
