@@ -7,8 +7,8 @@
        <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
            <div class="main_post">
                <p><b>{{title}} </b>
-                   {% if current_user.is_authenticated %}
-                        <input type="checkbox" name='remove_post' value={{post_id}}>{{post_id}}</p>
+                   <input type="checkbox" name='remove_post' value={{post_id}}><i>{{post_id}}</i></p>
+               {% if current_user.is_authenticated %}
                     {% endif %}
                <p>{{post}}</p>
                <p class="author"><i>Author: <b>{{user}}</b></i></p>
@@ -17,7 +17,7 @@
            <div class="posts">
                 <p><b>{{item.title}}</b>
                     {% if current_user.is_authenticated %}
-                        <input type="checkbox" name="remove_post" value={{item.id}} >{{item.id}}</p>
+                    <input type="checkbox" name="remove_post" value={{item.id}} ><i>{{item.id}}</i></p>
                     {% endif %}
                 <p>{{item.post}}</p>
                 <p class="author"><i>Author: <b>{{item.user}}</b></i></p>

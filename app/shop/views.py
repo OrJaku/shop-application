@@ -32,10 +32,12 @@ def home():
         page_post = posts_list[0]
     else:
         page_post = posts_list[len(posts_list) - 1]
-    post = Posts.query.filter_by(title=page_post).first().post
-    title = Posts.query.filter_by(post=post).first().title
-    user = Posts.query.filter_by(post=post).first().user
-    post_id = Posts.query.filter_by(post=post).first().id
+    post_db = Posts.query.filter_by(title=page_post).first()
+    post = Posts.query.filter_by(id=post_db.id).first().post
+
+    title = Posts.query.filter_by(id=post_db.id).first().title
+    user = Posts.query.filter_by(id=post_db.id).first().user
+    post_id = Posts.query.filter_by(id=post_db.id).first().id
     posts_list2 = []
     i = 0
     if len(posts_list) == 0 or len(posts_list) == 1:
@@ -298,13 +300,20 @@ def add_post():
 @shop.route('/remove_post', methods=['GET', 'POST'])
 @login_required
 def remove_post():
-    rem_post = request.form.getlist("remove_post")
+    rem_post = request.form.getlist("remove_post")  # post.id
     user = User.query.filter_by(username=current_user.username).first().username
-    post_user = Posts.query.filter_by(user=current_user.username).first()
-    print("TEST")
-    print("user:", user)
-    print("post_user", post_user)
-    print("curr", current_user)
+    post_user_list = []
+    post_user_filtered_list = []
+    if 'all_posts_remove' in rem_post:
+        pass
+    else:
+        for item in rem_post:
+            post_user = Posts.query.filter_by(id=item).first().user
+            post_user_list.append(post_user)  # post.user
+    # print("rem_post", rem_post)
+    # print("user:", user)
+    # print("post_user", post_user)
+    # print("post_user_list", post_user_list)
     if current_role() == role_req('admin'):
         if request.method == "POST":
             if 'all_posts_remove' in rem_post:
@@ -317,15 +326,18 @@ def remove_post():
                     db.session.commit()
                 flash(f'Post: {rem_post} has been removed', 'success')
             return redirect(url_for('shop.home'))
-
-    elif user == post_user:
-
+    elif user in post_user_list:
         for item in rem_post:
+            post_user = Posts.query.filter_by(id=item).first().user
+            print("user post", post_user)
+            if post_user == user:
+                post_user_filtered_list.append(item)
+        print('post_user_filtered_list', post_user_filtered_list)
+        for item in post_user_filtered_list:
             Posts.query.filter_by(id=item).delete()
             db.session.commit()
-        flash(f'Post: {rem_post} has been removed', 'success')
+        flash(f'Post: {post_user_filtered_list} has been removed', 'success')
         return redirect(url_for("shop.home"))
-
     else:
         flash("You do not have access to remove this post", 'error')
         return redirect(url_for("shop.home"))
