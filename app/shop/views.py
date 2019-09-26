@@ -3,6 +3,7 @@ from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, ChangePasswordForm
 from ..models import Product, User, Role, UserRoles, Posts
+import time
 from colorama import Fore, Style  # test
 
 shop = Blueprint('shop', __name__, template_folder='templates')
@@ -34,14 +35,14 @@ def home():
         page_post = posts_list[len(posts_list) - 1]
     post_db = Posts.query.filter_by(title=page_post).first()
     post = Posts.query.filter_by(id=post_db.id).first().post
-
     title = Posts.query.filter_by(id=post_db.id).first().title
     user = Posts.query.filter_by(id=post_db.id).first().user
+    time_date = Posts.query.filter_by(id=post_db.id).first().time_date
     post_id = Posts.query.filter_by(id=post_db.id).first().id
     posts_list2 = []
     i = 0
     if len(posts_list) == 0 or len(posts_list) == 1:
-        return render_template("home.html", title=title, post=post, user=user, post_id=post_id)
+        return render_template("home.html", title=title, post=post, user=user, post_id=post_id, time=time_date)
     elif len(posts_list) == 2:
         page_post2 = posts_list[0]
         post2 = Posts.query.filter_by(title=page_post2).first()
@@ -52,7 +53,8 @@ def home():
             page_post2 = posts_list[len(posts_list) - (i+1)]
             post2 = Posts.query.filter_by(title=page_post2).first()
             posts_list2.append(post2)
-    return render_template("home.html", title=title, post=post, user=user, post_id=post_id, posts_list2=posts_list2)
+    return render_template("home.html", title=title, post=post, user=user, time=time_date,
+                           post_id=post_id, posts_list2=posts_list2)
 
 
 @shop.route('/register', methods=["POST", "GET"])
@@ -291,7 +293,9 @@ def add_post():
         user = "Guest"
     else:
         user = current_user.username
-    new_post = Posts(title=title, post=post, user=user)
+    seconds = time.time()
+    time_date = time.ctime(seconds)
+    new_post = Posts(title=title, post=post, user=user, time=seconds, time_date=time_date)
     db.session.add(new_post)
     db.session.commit()
     return redirect(url_for('shop.home'))

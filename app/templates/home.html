@@ -6,21 +6,27 @@
       <br>
        <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
            <div class="main_post">
-               <p><b>{{title}} </b>
-                   <input type="checkbox" name='remove_post' value={{post_id}}><i>{{post_id}}</i></p>
+               <p>
+                   <b>{{title}} </b>
                {% if current_user.is_authenticated %}
-                    {% endif %}
+                   <input type="checkbox" name='remove_post' value={{post_id}}><i>{{post_id}}</i>
+               </p>
+               {% endif %}
                <p>{{post}}</p>
                <p class="author"><i>Author: <b>{{user}}</b></i></p>
+               <p></p><div class="post_date">{{time}}</div></p>
            </div>
             {% for item in posts_list2 %}
            <div class="posts">
-                <p><b>{{item.title}}</b>
+                <p>
+                    <b>{{item.title}}</b>
                     {% if current_user.is_authenticated %}
-                    <input type="checkbox" name="remove_post" value={{item.id}} ><i>{{item.id}}</i></p>
+                    <input type="checkbox" name="remove_post" value={{item.id}} ><i>{{item.id}}</i>
                     {% endif %}
+               </p>
                 <p>{{item.post}}</p>
                 <p class="author"><i>Author: <b>{{item.user}}</b></i></p>
+               <p><div class="post_date">{{item.time_date}}</div></p>
            </div>
            {% endfor %}
            {% if current_user.is_authenticated %}
@@ -36,7 +42,9 @@
      </form>
       </div>
           <form   class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
+              {% if current_user.is_authenticated %}
               <button form=main_post type="submit">Remove post</button>
+              {% endif %}
           </form>
     </body>
 {% endblock %}
