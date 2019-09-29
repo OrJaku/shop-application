@@ -1,19 +1,30 @@
-body { margin-top: 1px; background-color: #FFE;  font: 1em arial,sans-serif; }
-h1 { margin: 0.1em 2em 0.1em 1em;; font-size: 20px }
+body { margin-top: 0px; background-color: #FFE;  font: 1em arial,sans-serif; }
+h1 { margin: 0em 1em 0.1em 1em;; font-size: 18px }
 h2 { margin-left: 20px; font-size: 20px }
 p { margin-left: 10px; margin-right: 20px;, font: 1em arial,sans-serif; }
 
 /* Table */
-th { border: 1px solid; ;color:black}
-td { border: 1px solid; }
+
 #table p {
-color: black;
 margin-top: 5px; margin-bottom: 5px; margin-left: 10px; margin-right: 10px;
 text-align: center;
 }
-#table th {
-background-color: #F5F5F5;
 
+.table_title th {
+border-style: groove;
+border-radius: 10px;
+border-width: 2px;
+border-color: #B4C1EA;
+background-color: #F3F2F5;
+}
+
+.table_col {
+border-style: groove;
+border-radius: 10px;
+border-width: 1px;
+border-color: #B4C1EA;
+background-color: #F3FDF5;
+line-height: 1.5;
 }
 
 /* Menu bars */
@@ -60,7 +71,7 @@ body#profile a#profile
 }
 /* Page */
 #page {
-width: 80%; margin: 2em 2em 2em 2em; }
+width: 80%; margin: 0.5em 2em 2em 0em; }
 
 
 /* Buttons */

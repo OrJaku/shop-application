@@ -4,25 +4,25 @@
 {% block page %}
 <body id="shop_list">
 <div id="table" class="cb">
-   <table border="1">
-      <colgroup span="3"></colgroup>
-       <tr>
+   <table border="0">
+
+       <tr class="table_title">
             <th><p class="title">Name</p></th>
             <th><p class="title">Price</p></th>
             <th><p class="title">ID</p></th>
         </tr>
-        <tr>
-           <td>
+        <tr class="table_col">
+           <td class="table_col">
                {% for item in products_name %}
                   <p> <a href="{{ url_for('shop.shop_list',product=item)}}" >{{ item }}</a></p>
                {% endfor %}
            </td>
-            <td>
+            <td class="table_col">
                {% for item in products_price %}
                 <p>{{ item }}</p>
                {% endfor %}
            </td>
-            <td>
+            <td class="table_col">
                {% for item in products_id %}
                   <p> {{ item }}</p>
                {% endfor %}

@@ -3,26 +3,38 @@
 {% block h1 %}Users list{% endblock%}
 {% block page %}
 <body id="users">
+<div id="table">
     {% if current_role == role_req %}
-            <ul id="usersbar">
+    <table border="0">
+            <tr class="table_title">
+                <th>Users: </th>
+            </tr>
+            <tr class="table_col">
+            <td class="table_col">
                 {% for item in users_list %}
-                <li> <a href="{{ url_for('shop.users',username=item)}}" >{{ item }}</a></li>
-
-                {% endfor %}<br><br>
-            </ul>
+                <p><a href="{{ url_for('shop.users',username=item)}}" >{{ item }}</a></p>
+                {% endfor %}
+            </td>
+            </tr>
+    </table><br>
         <form class="rem-form" method="POST" action="{{ url_for('shop.remove_user') }}">
-            <input name="user" placeholder="User to remove"/>
+            <input name="user" placeholder="User to remove"/><br>
             <button id="rem"  type="submit">Delete</button>
         </form>
         {% else %}
-
-        <ul>
+    <table border="0">
+            <tr class="table_title">
+                <th>Users: </th>
+            </tr>
+            <tr class="table_col">
+            <td class="table_col">
             {% for item in users_list %}
-            <li> {{ item }} </li>
+                <p>{{ item }}</p>
             {% endfor %}
             {% endif %}
-        </ul><br>
-
+            </td>
+            </tr>
+    </table>
+    </div>
 </body>
-
 {% endblock %}
