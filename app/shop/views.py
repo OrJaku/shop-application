@@ -23,7 +23,6 @@ def current_role():
 def home():
     title = db.session.query(Posts.title).all()
     title = ([x[0] for x in title])
-    # print("Titles", title)
     posts_list = []
     for item in title:
         posts_list.append(item)
@@ -314,10 +313,6 @@ def remove_post():
         for item in rem_post:
             post_user = Posts.query.filter_by(id=item).first().user
             post_user_list.append(post_user)  # post.user
-    # print("rem_post", rem_post)
-    # print("user:", user)
-    # print("post_user", post_user)
-    # print("post_user_list", post_user_list)
     if current_role() == role_req('admin'):
         if request.method == "POST":
             if 'all_posts_remove' in rem_post:
