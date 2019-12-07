@@ -340,3 +340,14 @@ def remove_post():
     else:
         flash("You do not have access to remove this post", 'error')
         return redirect(url_for("shop.home"))
+
+
+@shop.route('/cart', methods=["POST", "GET"])
+def cart():
+    shopping_list = ["test"]
+    if request.method == "POST":
+        product = request.form['product']
+        shopping_list.append(product)
+        return render_template("cart.html", shopping_list=shopping_list)
+    else:
+        return render_template("cart.html")

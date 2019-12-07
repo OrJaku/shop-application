@@ -1,0 +1,12 @@
+{% extends "body.html" %}
+{% block title %}Shopping cart{% endblock%}
+{% block h1 %}Your shopping cart{% endblock%}
+{% block page %}
+ <body id="cart">
+
+    {% for product in shopping_list %}
+        <p>{{product}}</p>
+    {% endfor %}
+
+ </body>
+{% endblock %}

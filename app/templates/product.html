@@ -7,6 +7,9 @@
         <li>Product name: <b>{{ product.name }}</b> </li>
         <li>Price: <b>{{ product.price }}</b> </li>
         <li>Description: <b>{{ product.description }}</b>
+            <form class="add-form" method = "POST" action="{{ url_for('shop.cart')}}">
+                <br><br><button name=product value={{product.name}} id='add' type="submit" >Add to cart</button>
+            </form>
          {% if current_user.is_authenticated %}
             {% if current_role == role_req %}
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">

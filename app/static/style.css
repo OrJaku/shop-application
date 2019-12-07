@@ -64,7 +64,8 @@ body#shop_list a#shop_list,
 body#logout a#logout,
 body#login a#login,
 body#users a#users,
-body#profile a#profile
+body#profile a#profile,
+body#cart a#cart
 {
 	color: #FFFFFF;
 	background: #87CEEB;
