@@ -2,7 +2,7 @@ from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, ChangePasswordForm
-from ..models import Product, User, Role, UserRoles, Posts
+from ..models import Product, User, Role, UserRoles, Posts, Cart
 import time
 from colorama import Fore, Style  # test
 
@@ -258,6 +258,20 @@ def shop_list(product=None):
             return render_template('product.html', product=product)
 
 
+@shop.route('/product_quantity', methods=['GET', 'POST'])
+def product_quantity():
+    new_quantity = request.form['new_quantity']
+    product = request.form['product']
+    product = Product.query.filter_by(name=product).first()
+    product.quantity = new_quantity
+    db.session.add(product)
+    db.session.commit()
+    if current_user.is_authenticated:
+        return render_template('product.html', product=product, current_role=current_role(), role_req=role_req('admin'))
+    else:
+        return render_template('product.html', product=product)
+
+
 @shop.route('/add_description/', methods=['GET', 'POST'])
 def add_description():
     new_description = request.form['description']
@@ -345,9 +359,10 @@ def remove_post():
 @shop.route('/cart', methods=["POST", "GET"])
 def cart():
     shopping_list = ["test"]
+    ip = request.remote_addr
     if request.method == "POST":
         product = request.form['product']
         shopping_list.append(product)
-        return render_template("cart.html", shopping_list=shopping_list)
+        return render_template("cart.html", shopping_list=shopping_list, ip=ip)
     else:
-        return render_template("cart.html")
+        return render_template("cart.html", ip=ip)

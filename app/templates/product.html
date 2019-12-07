@@ -6,10 +6,19 @@
     <ul>
         <li>Product name: <b>{{ product.name }}</b> </li>
         <li>Price: <b>{{ product.price }}</b> </li>
-        <li>Description: <b>{{ product.description }}</b>
-            <form class="add-form" method = "POST" action="{{ url_for('shop.cart')}}">
-                <br><br><button name=product value={{product.name}} id='add' type="submit" >Add to cart</button>
-            </form>
+        <li>Quantity: <b>{{ product.quantity }}</b></li>
+        <li>
+        {% if current_user.is_authenticated %}
+                {% if current_role == role_req %}
+                    <form class="add-form" method = "POST" action="{{ url_for('shop.product_quantity')}}">
+                        <input name="new_quantity" placeholder="Change quantity"/>
+                        <br><button name=product value={{product.name}} type="submit">Change</button>
+                    </form>
+                 {% endif %}
+            {% endif %}
+        </li>
+        <li><br>
+        Description: <b>{{ product.description }}</b>
          {% if current_user.is_authenticated %}
             {% if current_role == role_req %}
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">
@@ -21,6 +30,11 @@
                 </form>
             {% endif %}
          {% endif %}
+        </li>
+        <li>
+            <form class="add-form" method = "POST" action="{{ url_for('shop.cart')}}">
+                <br><br><button name=product value={{product.name}} id='add' type="submit" >Add to cart</button>
+            </form>
         </li>
     </ul>
  </body>

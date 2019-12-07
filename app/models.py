@@ -10,6 +10,7 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
     price = db.Column(db.Float(), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String())
 
     def __repr__(self):
@@ -68,6 +69,13 @@ class Posts(db.Model):
 
     def __repr__(self):
         return f'{self.title} {self.post}'
+
+
+class Cart(db.Model):
+    __tablename__ = 'cart'
+    id = db.Column(db.Integer(), primary_key=True)
+    product = db.Column(db.String(), nullable=False)
+
 
 
 @login.user_loader
