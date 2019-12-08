@@ -238,6 +238,8 @@ def shop_list(product=None):
         products_price = ([x[0] for x in products_price])
         products_id = db.session.query(Product.id).all()
         products_id = ([x[0] for x in products_id])
+        products_quantity = db.session.query(Product.quantity).all()
+        products_quantity = ([x[0] for x in products_quantity])
         print(Fore.YELLOW + 'PR_Name', products_name)  # test#
         print(Style.RESET_ALL)  # test
         if not products_name:
@@ -245,9 +247,10 @@ def shop_list(product=None):
         if current_user.is_authenticated:
             return render_template("shop_list.html", products_list=products_list,
                                    products_name=products_name, products_price=products_price, products_id=products_id,
-                                   current_role=current_role(), role_req=role_req('admin'))
+                                   products_quantity=products_quantity, current_role=current_role(),
+                                   role_req=role_req('admin'))
         else:
-            return render_template("shop_list.html", products_list=products_list,
+            return render_template("shop_list.html", products_list=products_list, products_quantity=products_quantity,
                                    products_name=products_name, products_price=products_price, products_id=products_id)
     else:
         product = Product.query.filter_by(name=product).first()
@@ -260,8 +263,8 @@ def shop_list(product=None):
 
 @shop.route('/product_quantity', methods=['GET', 'POST'])
 def product_quantity():
+    product = request.form['product_quantity']
     new_quantity = request.form['new_quantity']
-    product = request.form['product']
     product = Product.query.filter_by(name=product).first()
     product.quantity = new_quantity
     db.session.add(product)

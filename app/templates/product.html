@@ -12,7 +12,7 @@
                 {% if current_role == role_req %}
                     <form class="add-form" method = "POST" action="{{ url_for('shop.product_quantity')}}">
                         <input name="new_quantity" placeholder="Change quantity"/>
-                        <br><button name=product value={{product.name}} type="submit">Change</button>
+                        <br><button name=product_quantity value={{product.name}} type="submit">Change</button>
                     </form>
                  {% endif %}
             {% endif %}

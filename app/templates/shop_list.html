@@ -9,6 +9,7 @@
        <tr class="table_title">
             <th><p class="title">Name</p></th>
             <th><p class="title">Price</p></th>
+            <th><p class="title">Quantity</p></th>
             <th><p class="title">ID</p></th>
         </tr>
         <tr class="table_col">
@@ -20,6 +21,11 @@
             <td class="table_col">
                {% for item in products_price %}
                 <p>{{ item }}</p>
+               {% endfor %}
+           </td>
+            <td class="table_col">
+               {% for item in products_quantity %}
+                  <p> {{ item }}</p>
                {% endfor %}
            </td>
             <td class="table_col">
