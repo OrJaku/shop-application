@@ -112,6 +112,12 @@ background: #F0F0F0;
   padding: 3px 0px;
 }
 
+input#quantity {
+color: #000000;
+width: 30px;
+background: #FFFFFF;
+}
+
 /* Flash message */
 #error{
 color: red;

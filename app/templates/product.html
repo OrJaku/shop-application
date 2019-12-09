@@ -6,13 +6,15 @@
     <ul>
         <li>Product name: <b>{{ product.name }}</b> </li>
         <li>Price: <b>{{ product.price }}</b> </li>
-        <li>Quantity: <b>{{ product.quantity }}</b></li>
-        <li>
-        {% if current_user.is_authenticated %}
+        <li>Quantity:
+            {% if current_user.is_authenticated and current_role != role_req or current_user.is_anonymous %}
+                    <b>{{ product.quantity }}</b>
+            {% endif %}
+            {% if current_user.is_authenticated %}
                 {% if current_role == role_req %}
                     <form class="add-form" method = "POST" action="{{ url_for('shop.product_quantity')}}">
-                        <input name="new_quantity" placeholder="Change quantity"/>
-                        <br><button name=product_quantity value={{product.name}} type="submit">Change</button>
+                        <input id="quantity" name="new_quantity" placeholder={{product.quantity}}>
+                        <button name=product_quantity value={{product.name}} type="submit">Change</button>
                     </form>
                  {% endif %}
             {% endif %}
