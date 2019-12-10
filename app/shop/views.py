@@ -112,7 +112,7 @@ def users(username=None):
             user = User.query.filter_by(username=username).first_or_404()
             role_temp_id = UserRoles.query.filter_by(user_id=user.id).first().role_id
             role_name = Role.query.filter_by(id=role_temp_id).first().name
-            print("ROLES", role_name)
+            print("Roles", role_name)
             print('Profile', user)
             return render_template("user.html", username=username, user=user, role=role_name,
                                    current_role=current_role(), role_req=role_req('admin'))
@@ -361,11 +361,29 @@ def remove_post():
 
 @shop.route('/cart', methods=["POST", "GET"])
 def cart():
-    shopping_list = ["test"]
     ip = request.remote_addr
+    cart_list_unfiltered_id = db.session.query(Cart.product_id)
+    cart_list_id = cart_list_unfiltered_id.filter_by(user_id=current_user.id)
+    user_cart_list_id = ([x[0] for x in cart_list_id])
+    user_cart_list = []
+    for product_id in user_cart_list_id:
+        product_name = Product.query.filter_by(id=product_id).first()
+        user_cart_list.append(product_name)
     if request.method == "POST":
-        product = request.form['product']
-        shopping_list.append(product)
-        return render_template("cart.html", shopping_list=shopping_list, ip=ip)
+        product_name = request.form['product']
+        product = Product.query.filter_by(name=product_name).first()
+        product_id = product.id
+        user_id = current_user.id
+        new_product = Cart(user_id=user_id, product_id=product_id)
+        db.session.add(new_product)
+        db.session.commit()
+        return render_template("cart.html", user_cart_list=user_cart_list, ip=ip)
     else:
-        return render_template("cart.html", ip=ip)
+        return render_template("cart.html", ip=ip, user_cart_list=user_cart_list)
+
+
+@shop.route('/buying', methods=["POST"])
+def buying():
+    products_name = request.form['cart']
+    print(products_name)
+    return redirect(url_for("shop.cart"))

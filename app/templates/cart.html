@@ -3,10 +3,35 @@
 {% block h1 %}Your shopping cart{% endblock%}
 {% block page %}
  <body id="cart">
-
-    {% for product in shopping_list %}
-        <p>{{product}}</p>
-    {% endfor %}
-    {{ ip }}
+     <div id="table" class="cb">
+       <table border="0">
+           <tr class="table_title">
+                <th><p class="title">Name</p></th>
+                <th><p class="title">Price</p></th>
+               <th><p class="title">Quantity</p></th>
+           </tr>
+           {%for product in user_cart_list%}
+           <tr class="table_col">
+                <td class="table_col">
+                    <b>{{ product.name }}</b>
+                </td>
+                <td class="table_col">
+                     <i>{{ product.price }}</i>
+                </td>
+                <td class="table_col">
+                    <select class="form-control" name="" id="">
+                        <option value=1> 1
+                        </option>
+                    </select>
+                    <button id='select' type="submit">Chose</button>
+                </td>
+           </tr>
+           {%endfor%}
+       </table>
+     </div>
+     <form class="add-form" method = "POST" action="{{ url_for('shop.buying')}}">
+        <br><button id='add' name=cart value="{{ user_cart_list }}" type="submit"><b>BUY</b></button>
+     </form>
+<!-- <br><p>{{ ip }}</p>-->
  </body>
 {% endblock %}

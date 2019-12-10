@@ -74,8 +74,8 @@ class Posts(db.Model):
 class Cart(db.Model):
     __tablename__ = 'cart'
     id = db.Column(db.Integer(), primary_key=True)
-    product = db.Column(db.String(), nullable=False)
-
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
 
 
 @login.user_loader
