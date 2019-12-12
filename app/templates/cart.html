@@ -30,8 +30,9 @@
        </table>
      </div>
      <form class="add-form" method = "POST" action="{{ url_for('shop.buying')}}">
-        <br><button id='add' name=cart value="{{ user_cart_list }}" type="submit"><b>BUY</b></button>
+        <br><button id='add' name=cart value='{{user_cart_list_name}}' type="submit"><b>BUY</b></button>
      </form>
+
 <!-- <br><p>{{ ip }}</p>-->
  </body>
 {% endblock %}

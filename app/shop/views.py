@@ -366,9 +366,11 @@ def cart():
     cart_list_id = cart_list_unfiltered_id.filter_by(user_id=current_user.id)
     user_cart_list_id = ([x[0] for x in cart_list_id])
     user_cart_list = []
+    user_cart_list_name = []
     for product_id in user_cart_list_id:
-        product_name = Product.query.filter_by(id=product_id).first()
-        user_cart_list.append(product_name)
+        product = Product.query.filter_by(id=product_id).first()
+        user_cart_list.append(product)
+        user_cart_list_name.append(product.name)
     if request.method == "POST":
         product_name = request.form['product']
         product = Product.query.filter_by(name=product_name).first()
@@ -377,13 +379,14 @@ def cart():
         new_product = Cart(user_id=user_id, product_id=product_id)
         db.session.add(new_product)
         db.session.commit()
-        return render_template("cart.html", user_cart_list=user_cart_list, ip=ip)
+        return redirect(url_for("shop.cart"))
     else:
-        return render_template("cart.html", ip=ip, user_cart_list=user_cart_list)
+        return render_template("cart.html", ip=ip, user_cart_list=user_cart_list,
+                               user_cart_list_name=user_cart_list_name)
 
 
 @shop.route('/buying', methods=["POST"])
 def buying():
-    products_name = request.form['cart']
-    print(products_name)
+    cart_products = request.form['cart']
+    print("cart", cart_products)
     return redirect(url_for("shop.cart"))
