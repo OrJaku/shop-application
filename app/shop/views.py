@@ -360,6 +360,7 @@ def remove_post():
 
 
 @shop.route('/cart', methods=["POST", "GET"])
+@login_required
 def cart():
     ip = request.remote_addr
     cart_list_unfiltered_id = db.session.query(Cart.product_id)
@@ -385,8 +386,22 @@ def cart():
                                user_cart_list_name=user_cart_list_name)
 
 
-@shop.route('/buying', methods=["POST"])
-def buying():
-    cart_products = request.form['cart']
-    print("cart", cart_products)
+@shop.route('/clear_cart', methods=["POST"])
+def clear_cart():
+    cart_products = request.form['clear_cart']
+    for i in cart_products:
+        Cart.query.filter_by(user_id=current_user.id).delete()
+        db.session.commit()
+    print("Clearing completed", cart_products)
     return redirect(url_for("shop.cart"))
+
+
+@shop.route('/buy', methods=["POST"])
+def buy():
+    cart_products = request.form.getlist('buy')
+    print("buy", type(cart_products), cart_products)
+    for product in cart_products:
+        print("product", product)
+        x = Product.query.filter_by(name=product).first()
+    return redirect(url_for("shop.cart"))
+
