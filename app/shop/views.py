@@ -388,20 +388,23 @@ def cart():
 
 @shop.route('/clear_cart', methods=["POST"])
 def clear_cart():
-    cart_products = request.form['clear_cart']
-    for i in cart_products:
-        Cart.query.filter_by(user_id=current_user.id).delete()
-        db.session.commit()
-    print("Clearing completed", cart_products)
+    cart_products = Cart.query.filter_by(user_id=current_user.id)
+    cart_products.delete()
+    db.session.commit()
     return redirect(url_for("shop.cart"))
 
 
 @shop.route('/buy', methods=["POST"])
 def buy():
-    cart_products = request.form.getlist('buy')
-    print("buy", type(cart_products), cart_products)
-    for product in cart_products:
-        print("product", product)
-        x = Product.query.filter_by(name=product).first()
+    buying_quantity = 1
+    cart_products = Cart.query.filter_by(user_id=current_user.id)
+    flash('Products:\n', 'success')
+    for products in cart_products:
+        product = Product.query.filter_by(id=products.product_id).first()
+        update_quantity = product.quantity - buying_quantity
+        product.quantity = update_quantity
+        cart_products.delete()
+        db.session.commit()
+        flash(f'{product.name}', 'success')
+    flash('\nhave been bought', 'success')
     return redirect(url_for("shop.cart"))
-

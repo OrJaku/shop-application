@@ -21,7 +21,6 @@
                 <td class="table_col">
                     <form class="add-form" method = "POST" action="{{ url_for('shop.cart')}}">
                         <input id="quantity" name="quantity" value='1'> / {{product.quantity}}
-                        <button name=quantity   type="submit" >Chose</button>
                     </form>
                 </td>
            </tr>
@@ -29,10 +28,11 @@
        </table>
      </div>
      <form class="buy-form" method = "POST" action="{{ url_for('shop.buy')}}">
-        <br><button id='add' name=buy value='{{user_cart_list_name}}' type="submit"><b>BUY</b></button>
+        <br><button id='add' name=buy value={{user_cart_list_name}} type="submit"><b>BUY</b></button>
      </form>
      <form class="rem-form" method = "POST" action="{{ url_for('shop.clear_cart')}}">
-        <br><button id='rem' name=clear_cart value='{{user_cart_list_name}}' type="submit">Clear your cart</button>
+
+        <br><button id='rem' name=clear_cart value={{user_cart_list_name}} type="submit">Clear your cart</button>
      </form>
 <!-- <br><p>{{ ip }}</p>-->
  </body>
