@@ -13,8 +13,8 @@
             {% if current_user.is_authenticated %}
                 {% if current_role == role_req %}
                     <form class="add-form" method = "POST" action="{{ url_for('shop.product_quantity')}}">
-                        <input id="quantity" name="new_quantity" placeholder={{product.quantity}}>
-                        <button name=product_quantity value={{product.name}} type="submit">Change</button>
+                        <input id="quantity" name=new_quantity value={{product.quantity}}>
+                        <button name=product_name value={{product.name}} type="submit">Change</button>
                     </form>
                  {% endif %}
             {% endif %}
@@ -25,7 +25,7 @@
             {% if current_role == role_req %}
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">
                     <br><textarea rows="5" cols="50"  name="description" >{{product.description}}</textarea><br>
-                    <button id='select' name=product type="submit" value={{product.name}} >Change description</button>
+                    <button name=product value={{product.name}} id='select' type="submit">Change description</button>
                 </form>
                 <form class="rem-form" method = "POST" action="{{ url_for('shop.delete')}}">
                     <br><br><button name=product value={{product.name}} id='rem' type="submit" >Remove product</button>

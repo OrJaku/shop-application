@@ -263,7 +263,7 @@ def shop_list(product=None):
 
 @shop.route('/product_quantity', methods=['GET', 'POST'])
 def product_quantity():
-    product = request.form['product_quantity']
+    product = request.form['product_name']
     new_quantity = request.form['new_quantity']
     product = Product.query.filter_by(name=product).first()
     product.quantity = new_quantity
@@ -370,20 +370,21 @@ def cart():
     user_cart_list_name = []
     for product_id in user_cart_list_id:
         product = Product.query.filter_by(id=product_id).first()
-        if product in user_cart_list:
-            flash(f'{product.name} already is in your cart', 'info')
-        else:
-            user_cart_list.append(product)
-            user_cart_list_name.append(product.name)
+        user_cart_list.append(product)
+        user_cart_list_name.append(product.name)
     if request.method == "POST":
         product_name = request.form['product']
-        product = Product.query.filter_by(name=product_name).first()
-        product_id = product.id
-        user_id = current_user.id
-        new_product = Cart(user_id=user_id, product_id=product_id)
-        db.session.add(new_product)
-        db.session.commit()
-        return redirect(url_for("shop.cart"))
+        if product_name in user_cart_list_name:
+            flash(f'{product_name} already is in your shopping cart', 'info')
+            return redirect(url_for("shop.cart"))
+        else:
+            product = Product.query.filter_by(name=product_name).first()
+            product_id = product.id
+            user_id = current_user.id
+            new_product = Cart(user_id=user_id, product_id=product_id)
+            db.session.add(new_product)
+            db.session.commit()
+            return redirect(url_for("shop.cart"))
     else:
         return render_template("cart.html", ip=ip, user_cart_list=user_cart_list,
                                user_cart_list_name=user_cart_list_name)
