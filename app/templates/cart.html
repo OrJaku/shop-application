@@ -13,7 +13,7 @@
            {%for product in user_cart_list%}
            <tr class="table_col">
                 <td class="table_col">
-                    <b>{{ product.name }}</b>
+                    <b><a href="{{ url_for('shop.shop_list',product=product.name)}}" >{{ product.name }}</a></b>
                 </td>
                 <td class="table_col">
                      <i>{{ product.price }}</i>

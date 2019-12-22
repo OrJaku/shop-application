@@ -370,8 +370,11 @@ def cart():
     user_cart_list_name = []
     for product_id in user_cart_list_id:
         product = Product.query.filter_by(id=product_id).first()
-        user_cart_list.append(product)
-        user_cart_list_name.append(product.name)
+        if product in user_cart_list:
+            flash(f'{product.name} already is in your cart', 'info')
+        else:
+            user_cart_list.append(product)
+            user_cart_list_name.append(product.name)
     if request.method == "POST":
         product_name = request.form['product']
         product = Product.query.filter_by(name=product_name).first()
