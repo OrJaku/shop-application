@@ -4,9 +4,12 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, ChangePasswordForm
 from ..models import Product, User, Role, UserRoles, Posts, Cart
 import time
-from colorama import Fore, Style  # test
+from colorama import Fore, Style
+import logging
 
 shop = Blueprint('shop', __name__, template_folder='templates')
+
+logging.basicConfig(level=logging.INFO)
 
 
 def role_req(role_name):
@@ -73,8 +76,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Registered successfully', 'success')
-        print(Fore.YELLOW + 'user', user)  # test#
-        print(Style.RESET_ALL)  # test
+        logging.info("User %s", user)
         return redirect(url_for('shop.login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -112,8 +114,8 @@ def users(username=None):
             user = User.query.filter_by(username=username).first_or_404()
             role_temp_id = UserRoles.query.filter_by(user_id=user.id).first().role_id
             role_name = Role.query.filter_by(id=role_temp_id).first().name
-            print("Roles", role_name)
-            print('Profile', user)
+            logging.info("Role Name: %s", role_name)
+            logging.info("User: %s", user)
             return render_template("user.html", username=username, user=user, role=role_name,
                                    current_role=current_role(), role_req=role_req('admin'))
         return render_template("users.html", users_list=users_list, current_role=current_role(),
@@ -128,7 +130,6 @@ def users(username=None):
 def role(username):
     get_role_name = request.form.get("role")
     get_role_id = Role.query.filter_by(name=get_role_name).first().id
-    # print('Get role', get_role_id, get_role_name)
     user_id = User.query.filter_by(username=username).first().id
     db.session.query(UserRoles).filter(UserRoles.user_id == user_id).update({'role_id': get_role_id})
     db.session.commit()
@@ -184,7 +185,7 @@ def remove_user():
     user = request.form['user']
     user_list = db.session.query(User.username).all()
     user_list = ([x[0] for x in user_list])
-    print("user list", user_list)
+    logging.info("User List %s", user_list)
     if user == 'admin' or user not in user_list:
         flash('Invalid user', 'error')
     else:
@@ -240,8 +241,7 @@ def shop_list(product=None):
         products_id = ([x[0] for x in products_id])
         products_quantity = db.session.query(Product.quantity).all()
         products_quantity = ([x[0] for x in products_quantity])
-        print(Fore.YELLOW + 'PR_Name', products_name)  # test#
-        print(Style.RESET_ALL)  # test
+        logging.info("Products list %s", products_name)
         if not products_name:
             flash('Product list is empty', 'info')
         if current_user.is_authenticated:
@@ -280,7 +280,6 @@ def add_description():
     new_description = request.form['description']
     product = request.form['product']
     product = Product.query.filter_by(name=product).first()
-    # print("New description", new_description)
     product.description = new_description
     db.session.add(product)
     db.session.commit()
@@ -336,7 +335,8 @@ def remove_post():
                 Posts.query.filter().delete()
                 db.session.commit()
             else:
-                print("Posts to remove:", rem_post)
+                logging.info("Posts to remove %s", rem_post)
+
                 for item in rem_post:
                     Posts.query.filter_by(id=item).delete()
                     db.session.commit()
@@ -345,10 +345,11 @@ def remove_post():
     elif user in post_user_list:
         for item in rem_post:
             post_user = Posts.query.filter_by(id=item).first().user
-            print("user post", post_user)
+            logging.info("User post %s", post_user)
             if post_user == user:
                 post_user_filtered_list.append(item)
-        print('post_user_filtered_list', post_user_filtered_list)
+        logging.info("Post user filtered list%s", post_user_filtered_list)
+
         for item in post_user_filtered_list:
             Posts.query.filter_by(id=item).delete()
             db.session.commit()
@@ -381,7 +382,7 @@ def cart():
             product = Product.query.filter_by(name=product_name).first()
             product_id = product.id
             user_id = current_user.id
-            new_product = Cart(user_id=user_id, product_id=product_id)
+            new_product = Cart(user_id=user_id, product_id=product_id, quantity=1)
             db.session.add(new_product)
             db.session.commit()
             return redirect(url_for("shop.cart"))
@@ -400,6 +401,7 @@ def clear_cart():
 
 @shop.route('/buy', methods=["POST"])
 def buy():
+    # buying_quantity = request.form['buy']
     buying_quantity = 1
     cart_products = Cart.query.filter_by(user_id=current_user.id)
     flash('Products:\n', 'success')

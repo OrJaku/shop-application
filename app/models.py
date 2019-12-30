@@ -76,6 +76,7 @@ class Cart(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
+    quantity = db.Column(db.Integer(), nullable=True)
 
 
 @login.user_loader
