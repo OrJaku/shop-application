@@ -42,6 +42,11 @@
                  <br> <input name="product_price" placeholder="Price"/><br>
                  <button id="add" type="submit">Add</button>
              </form>
+             <form method="POST" action="{{ url_for('shop.add_csv') }}" enctype="multipart/form-data">
+                 <br> Select a file:
+                 <br><input type="file" name=csv_file accept=".csv">
+                 <br><button type="submit">Import file</button>
+             </form>
              <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
                  <br> <input name="product" placeholder="Product to remove"/><br>
                  <button id="rem" type="submit">Delete</button><br><br><br>

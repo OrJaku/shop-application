@@ -6,6 +6,9 @@ from ..models import Product, User, Role, UserRoles, Posts, Cart
 import time
 from colorama import Fore, Style
 import logging
+import pandas as pd
+import io
+import csv
 
 shop = Blueprint('shop', __name__, template_folder='templates')
 
@@ -206,6 +209,19 @@ def add():
         db.session.add(new_product)
         flash('Product %s (price: %s) has been added' % (product_name, product_price), 'success')
         db.session.commit()
+    return redirect(url_for('shop.shop_list'))
+
+
+@shop.route('/add_csv', methods=['GET', 'POST'])
+def add_csv():
+    if request.method == "POST":
+        updated_file = request.files['csv_file']
+        stream = io.StringIO(updated_file.stream.read().decode("UTF8"), newline=None)
+        data = csv.reader(stream)
+        print("CSV___:", data)
+        for item in data:
+            print(item)
+        return redirect(url_for('shop.shop_list'))
     return redirect(url_for('shop.shop_list'))
 
 
