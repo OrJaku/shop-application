@@ -217,10 +217,10 @@ def add_csv():
     if request.method == "POST":
         updated_file = request.files['csv_file']
         stream = io.StringIO(updated_file.stream.read().decode("UTF8"), newline=None)
-        data = csv.reader(stream)
-        print("CSV___:", data)
-        for item in data:
-            print(item)
+        data_file = list(csv.reader(stream, delimiter=','))
+        for row in data_file[1:]:
+            for column in row:
+                print("Column", column)
         return redirect(url_for('shop.shop_list'))
     return redirect(url_for('shop.shop_list'))
 
