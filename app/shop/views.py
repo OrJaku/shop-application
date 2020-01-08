@@ -200,14 +200,15 @@ def remove_user():
 
 @shop.route('/add', methods=['POST'])
 def add():
-    product_name = request.form['product_name']
-    product_price = request.form['product_price']
-    new_product = Product(name=product_name, price=product_price)
-    if product_name == '' or product_price == '':
-        flash('Enter product name and price', 'error')
+    prod_name = request.form['product_name']
+    prod_price = request.form['product_price']
+    prod_quantity = request.form['product_quantity']
+    new_product = Product(name=prod_name, price=prod_price, quantity=prod_quantity)
+    if prod_name == '' or prod_price == '' or prod_quantity == '':
+        flash('Enter product name, price and quantity', 'error')
     else:
         db.session.add(new_product)
-        flash('Product %s (price: %s) has been added' % (product_name, product_price), 'success')
+        flash('Product %s (price: %s) has been added' % (prod_name, prod_price), 'success')
         db.session.commit()
     return redirect(url_for('shop.shop_list'))
 
@@ -219,8 +220,9 @@ def add_csv():
         stream = io.StringIO(updated_file.stream.read().decode("UTF8"), newline=None)
         data_file = list(csv.reader(stream, delimiter=','))
         for row in data_file[1:]:
-            for column in row:
-                print("Column", column)
+            new_product = Product(name=row[0], price=row[1], quantity=int(row[2]), description=row[3])
+            db.session.add(new_product)
+            db.session.commit()
         return redirect(url_for('shop.shop_list'))
     return redirect(url_for('shop.shop_list'))
 
@@ -233,14 +235,17 @@ def delete():
         db.session.commit()
         flash('All products has been removed from list', 'error')
     else:
-        products_list = db.session.query(Product.name).all()
-        products_list = ([x[0] for x in products_list])
-        if product_remove in products_list:
-            Product.query.filter_by(name=product_remove).delete()
-            flash('Product %s has been removed' % product_remove, 'success')
-            db.session.commit()
+        if not product_remove:
+            product_list_remove = request.form.getlist("remove_product")
         else:
-            flash('Product %s is not on list' % product_remove, 'error')
+            products_list = db.session.query(Product.name).all()
+            products_list = ([x[0] for x in products_list])
+            if product_remove in products_list:
+                Product.query.filter_by(name=product_remove).delete()
+                flash('Product %s has been removed' % product_remove, 'success')
+                db.session.commit()
+            else:
+                flash('Product %s is not on list' % product_remove, 'error')
     return redirect(url_for('shop.shop_list'))
 
 
@@ -352,7 +357,6 @@ def remove_post():
                 db.session.commit()
             else:
                 logging.info("Posts to remove %s", rem_post)
-
                 for item in rem_post:
                     Posts.query.filter_by(id=item).delete()
                     db.session.commit()
@@ -365,7 +369,6 @@ def remove_post():
             if post_user == user:
                 post_user_filtered_list.append(item)
         logging.info("Post user filtered list%s", post_user_filtered_list)
-
         for item in post_user_filtered_list:
             Posts.query.filter_by(id=item).delete()
             db.session.commit()

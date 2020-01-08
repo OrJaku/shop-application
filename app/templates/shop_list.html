@@ -14,7 +14,9 @@
         <tr class="table_col">
            <td class="table_col">
                {% for item in products_name %}
-                  <p> <a href="{{ url_for('shop.shop_list',product=item)}}" >{{ item }}</a></p>
+                <p>
+                  <a href="{{ url_for('shop.shop_list',product=item)}}" >{{ item }}</a>
+               </p>
                {% endfor %}
            </td>
             <td class="table_col">
@@ -29,7 +31,14 @@
            </td>
             <td class="table_col">
                {% for item in products_id %}
-                  <p> {{ item }}</p>
+                  <p>
+                      {{ item }}
+                        {% if current_user.is_authenticated %}
+                            {% if current_role == role_req %}
+                                <input type="checkbox" name='remove_product' value={{item}}>
+                            {% endif %}
+                        {% endif %}
+                  </p>
                {% endfor %}
            </td>
          </tr>
@@ -39,7 +48,8 @@
         {% if current_role == role_req %}
              <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
                  <br> <input name="product_name" placeholder="Product name"/>
-                 <br> <input name="product_price" placeholder="Price"/><br>
+                 <br> <input name="product_price" placeholder="Price"/>
+                 <br> <input name="product_quantity" placeholder="Quantity"/><br>
                  <button id="add" type="submit">Add</button>
              </form>
              <form method="POST" action="{{ url_for('shop.add_csv') }}" enctype="multipart/form-data">
