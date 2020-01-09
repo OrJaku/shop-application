@@ -29,18 +29,21 @@
                   <p> {{ item }}</p>
                {% endfor %}
            </td>
-            <td class="table_col">
-               {% for item in products_id %}
-                  <p>
-                      {{ item }}
-                        {% if current_user.is_authenticated %}
-                            {% if current_role == role_req %}
-                                <input type="checkbox" name='remove_product' value={{item}}>
-                            {% endif %}
-                        {% endif %}
-                  </p>
-               {% endfor %}
-           </td>
+                 <td class="table_col">
+                     <form id = 'checkbox_id' class="post-form" method = "POST" action="{{ url_for('shop.delete')}}" >
+                       {% for item in products_id %}
+                          <p>
+                              {{ item }}
+                                {% if current_user.is_authenticated %}
+                                    {% if current_role == role_req %}
+                                        <input type="checkbox" name="remove_product" value={{item}}>
+                                    {% endif %}
+                                {% endif %}
+                          </p>
+                       {% endfor %}
+                     </form>
+                </td>
+
          </tr>
    </table><br><br>
 </div>
@@ -60,6 +63,9 @@
              <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
                  <br> <input name="product" placeholder="Product to remove"/><br>
                  <button id="rem" type="submit">Delete</button><br><br><br>
+             </form>
+             <form class="rem-form" method="POST">
+                 <button form=checkbox_id type="submit">Delete more</button><br><br><br>
              </form>
         {% endif %}
     {% endif %}

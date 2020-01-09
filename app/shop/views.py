@@ -229,14 +229,12 @@ def add_csv():
 
 @shop.route('/delete', methods=['POST'])
 def delete():
-    product_remove = request.form['product']
-    if product_remove == "del_all_prod":
-        Product.query.filter().delete()
-        db.session.commit()
-        flash('All products has been removed from list', 'error')
-    else:
-        if not product_remove:
-            product_list_remove = request.form.getlist("remove_product")
+    if request.form['product']:
+        product_remove = request.form['product']
+        if product_remove == "del_all_prod":
+            Product.query.filter().delete()
+            db.session.commit()
+            flash('All products has been removed from list', 'error')
         else:
             products_list = db.session.query(Product.name).all()
             products_list = ([x[0] for x in products_list])
@@ -246,6 +244,11 @@ def delete():
                 db.session.commit()
             else:
                 flash('Product %s is not on list' % product_remove, 'error')
+    else:
+        product_list_remove = request.form.getlist("remove_product")
+        for product in product_list_remove:
+            Posts.query.filter_by(id=product).delete()
+            db.session.commit()
     return redirect(url_for('shop.shop_list'))
 
 
