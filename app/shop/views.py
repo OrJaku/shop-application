@@ -229,26 +229,29 @@ def add_csv():
 
 @shop.route('/delete', methods=['POST'])
 def delete():
-    if request.form['product']:
-        product_remove = request.form['product']
-        if product_remove == "del_all_prod":
-            Product.query.filter().delete()
-            db.session.commit()
-            flash('All products has been removed from list', 'error')
-        else:
-            products_list = db.session.query(Product.name).all()
-            products_list = ([x[0] for x in products_list])
-            if product_remove in products_list:
-                Product.query.filter_by(name=product_remove).delete()
-                flash('Product %s has been removed' % product_remove, 'success')
-                db.session.commit()
-            else:
-                flash('Product %s is not on list' % product_remove, 'error')
+    product_remove = request.form['product']
+    if product_remove == "del_all_prod":
+        Product.query.filter().delete()
+        db.session.commit()
+        flash('All products has been removed from list', 'error')
     else:
-        product_list_remove = request.form.getlist("remove_product")
-        for product in product_list_remove:
-            Posts.query.filter_by(id=product).delete()
+        products_list = db.session.query(Product.name).all()
+        products_list = ([x[0] for x in products_list])
+        if product_remove in products_list:
+            Product.query.filter_by(name=product_remove).delete()
+            flash('Product %s has been removed' % product_remove, 'success')
             db.session.commit()
+        else:
+            flash('Product %s is not on list' % product_remove, 'error')
+    return redirect(url_for('shop.shop_list'))
+
+
+@shop.route('/delete_selected', methods=['POST'])
+def delete_selected():
+    product_list_remove = request.form.getlist("remove_product")
+    for product_id in product_list_remove:
+        Product.query.filter_by(id=product_id).delete()
+        db.session.commit()
     return redirect(url_for('shop.shop_list'))
 
 

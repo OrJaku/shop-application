@@ -30,7 +30,7 @@
                {% endfor %}
            </td>
                  <td class="table_col">
-                     <form id = 'checkbox_id' class="post-form" method = "POST" action="{{ url_for('shop.delete')}}" >
+                     <form id = 'checkbox_id' class="post-form" method = "POST" action="{{ url_for('shop.delete_selected')}}" >
                        {% for item in products_id %}
                           <p>
                               {{ item }}
