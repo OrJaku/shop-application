@@ -4,9 +4,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, ChangePasswordForm
 from ..models import Product, User, Role, UserRoles, Posts, Cart
 import time
-from colorama import Fore, Style
 import logging
-import pandas as pd
 import io
 import csv
 
@@ -213,36 +211,39 @@ def add():
     return redirect(url_for('shop.shop_list'))
 
 
-@shop.route('/add_csv', methods=['GET', 'POST'])
-def add_csv():
+@shop.route('/import_csv', methods=['GET', 'POST'])
+def import_csv():
     if request.method == "POST":
         updated_file = request.files['csv_file']
-        stream = io.StringIO(updated_file.stream.read().decode("UTF8"), newline=None)
-        data_file = list(csv.reader(stream, delimiter=','))
-        for row in data_file[1:]:
-            new_product = Product(name=row[0], price=row[1], quantity=int(row[2]), description=row[3])
-            db.session.add(new_product)
-            db.session.commit()
+        if not updated_file:
+            flash("You don't chose CSV file or file is empty", 'info')
+        else:
+            stream = io.StringIO(updated_file.stream.read().decode("utf-8"), newline=None)
+            data_file = list(csv.reader(stream, delimiter=','))
+            for row in data_file[1:]:
+                if row[0] == "" or row[1] == "" or row[2] == "":
+                    flash('Some cells in file are empty, please check fill of columns and rows'
+                          '(product name, price and quantity)', 'error')
+                else:
+                    new_product = Product(name=row[0], price=row[1], quantity=int(row[2]), description=row[3])
+                    db.session.add(new_product)
+                    flash('Added product: %s' % new_product.name, 'success')
+                    db.session.commit()
+            return redirect(url_for('shop.shop_list'))
         return redirect(url_for('shop.shop_list'))
-    return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/delete', methods=['POST'])
 def delete():
     product_remove = request.form['product']
-    if product_remove == "del_all_prod":
-        Product.query.filter().delete()
+    products_list = db.session.query(Product.name).all()
+    products_list = ([x[0] for x in products_list])
+    if product_remove in products_list:
+        Product.query.filter_by(name=product_remove).delete()
+        flash('Product %s has been removed' % product_remove, 'success')
         db.session.commit()
-        flash('All products has been removed from list', 'error')
     else:
-        products_list = db.session.query(Product.name).all()
-        products_list = ([x[0] for x in products_list])
-        if product_remove in products_list:
-            Product.query.filter_by(name=product_remove).delete()
-            flash('Product %s has been removed' % product_remove, 'success')
-            db.session.commit()
-        else:
-            flash('Product %s is not on list' % product_remove, 'error')
+        flash('Product %s is not on list' % product_remove, 'error')
     return redirect(url_for('shop.shop_list'))
 
 
@@ -253,6 +254,27 @@ def delete_selected():
         Product.query.filter_by(id=product_id).delete()
         db.session.commit()
     return redirect(url_for('shop.shop_list'))
+
+
+@shop.route('/export_csv', methods=['GET', 'POST'])
+def export_csv():
+    products_id = db.session.query(Product.id).all()
+    products_to_csv = []
+    time_data = time.strftime("%Y%m%d-%H%M%S")
+    with open('product_list_%s.csv' % time_data, mode='w') as csv_file:
+        new_row = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for product_id in products_id:
+            product = Product.query.filter_by(id=product_id).first()
+            prod_id = product.id
+            prod_name = product.name
+            prod_price = product.price
+            prod_quantity = product.quantity
+            prod_description = product.description
+            product_to_csv = [prod_id, prod_name, prod_price, prod_quantity, prod_description]
+            new_row.writerow(product_to_csv)
+            products_to_csv.append(product_to_csv)
+        flash('You exported products list to file "product_list_%s.csv"' % time_data, 'success')
+        return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/list', methods=['GET', 'POST'])
