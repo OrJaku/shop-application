@@ -1,8 +1,8 @@
 # shop-application
 
-####It is web application base on **Python - Flask**  (and HTML/CSS)
+##### It is web application base on **Python - Flask**  (and HTML/CSS)
 
-##### Application abilities:
+###### Application abilities:
 ####
 
 
@@ -17,13 +17,14 @@
  2. Products
  
     - add / remove (depends of role) new products
+    - import / export products from CSV/JSON
     - change and add attributes of products (e.g. descriptions, quantities)
     - modifying products 
     - list of products 
-    - shopping cart 
+    - shopping cart / ordering
     
  3. Homepage and posts 
   
     - add new post by users
     - modifying posts 
-    - post order
+    - posts manage
