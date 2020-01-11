@@ -58,10 +58,14 @@
              <form method="POST" action="{{ url_for('shop.import_csv') }}" enctype="multipart/form-data">
                  <br> Select a file:
                  <br><input type="file" name=csv_file accept=".csv">
-                 <br><button type="submit">Import file</button>
+                 <br><button type="submit">Import file</button><br>
              </form>
-             <form class="export-form" method="POST" action="{{ url_for('shop.export_csv') }}">
-                 <button  type="submit">Export file</button><br><br>
+            <form class="export-form" method="POST" action="{{ url_for('shop.export_products') }}">
+                 <button type="submit">Export file</button>
+                 <select class="form-control" name="format" id="format">
+                        <option value='csv'>csv </option>
+                        <option value='json'>json </option>
+                 </select><br>
              </form>
              <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
                  <br> <input name="product" placeholder="Product to remove"/><br>

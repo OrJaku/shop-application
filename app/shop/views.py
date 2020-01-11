@@ -7,6 +7,7 @@ import time
 import logging
 import io
 import csv
+import json
 
 shop = Blueprint('shop', __name__, template_folder='templates')
 
@@ -211,28 +212,6 @@ def add():
     return redirect(url_for('shop.shop_list'))
 
 
-@shop.route('/import_csv', methods=['GET', 'POST'])
-def import_csv():
-    if request.method == "POST":
-        updated_file = request.files['csv_file']
-        if not updated_file:
-            flash("You don't chose CSV file or file is empty", 'info')
-        else:
-            stream = io.StringIO(updated_file.stream.read().decode("utf-8"), newline=None)
-            data_file = list(csv.reader(stream, delimiter=','))
-            for row in data_file[1:]:
-                if row[0] == "" or row[1] == "" or row[2] == "":
-                    flash('Some cells in file are empty, please check fill of columns and rows'
-                          '(product name, price and quantity)', 'error')
-                else:
-                    new_product = Product(name=row[0], price=row[1], quantity=int(row[2]), description=row[3])
-                    db.session.add(new_product)
-                    flash('Added product: %s' % new_product.name, 'success')
-                    db.session.commit()
-            return redirect(url_for('shop.shop_list'))
-        return redirect(url_for('shop.shop_list'))
-
-
 @shop.route('/delete', methods=['POST'])
 def delete():
     product_remove = request.form['product']
@@ -256,24 +235,64 @@ def delete_selected():
     return redirect(url_for('shop.shop_list'))
 
 
-@shop.route('/export_csv', methods=['GET', 'POST'])
-def export_csv():
+@shop.route('/import_csv', methods=['GET', 'POST'])
+def import_csv():
+    if request.method == "POST":
+        updated_file = request.files['csv_file']
+        if not updated_file:
+            flash("You don't chose CSV file or file is empty", 'info')
+        else:
+            stream = io.StringIO(updated_file.stream.read().decode("utf-8"), newline=None)
+            data_file = list(csv.reader(stream, delimiter=','))
+            for row in data_file[1:]:
+                if row[0] == "" or row[1] == "" or row[2] == "":
+                    flash('Some cells in file are empty, please check fill of columns and rows'
+                          '(product name, price and quantity)', 'error')
+                else:
+                    new_product = Product(name=row[0], price=row[1], quantity=int(row[2]), description=row[3])
+                    db.session.add(new_product)
+                    flash('Added product: %s' % new_product.name, 'success')
+                    db.session.commit()
+            return redirect(url_for('shop.shop_list'))
+        return redirect(url_for('shop.shop_list'))
+
+
+@shop.route('/export_products', methods=['GET', 'POST'])
+def export_products():
     products_id = db.session.query(Product.id).all()
-    products_to_csv = []
     time_data = time.strftime("%Y%m%d-%H%M%S")
-    with open('product_list_%s.csv' % time_data, mode='w') as csv_file:
-        new_row = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        for product_id in products_id:
-            product = Product.query.filter_by(id=product_id).first()
-            prod_id = product.id
-            prod_name = product.name
-            prod_price = product.price
-            prod_quantity = product.quantity
-            prod_description = product.description
-            product_to_csv = [prod_id, prod_name, prod_price, prod_quantity, prod_description]
-            new_row.writerow(product_to_csv)
-            products_to_csv.append(product_to_csv)
-        flash('You exported products list to file "product_list_%s.csv"' % time_data, 'success')
+    export_format = request.form['format']
+    if export_format == 'csv':
+        products_to_csv = []
+        with open('product_list_%s.csv' % time_data, mode='w') as csv_file:
+            new_row = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for product_id in products_id:
+                product = Product.query.filter_by(id=product_id).first()
+                prod_id = product.id
+                prod_name = product.name
+                prod_price = product.price
+                prod_quantity = product.quantity
+                prod_description = product.description
+                product_to_csv = [prod_id, prod_name, prod_price, prod_quantity, prod_description]
+                new_row.writerow(product_to_csv)
+                products_to_csv.append(product_to_csv)
+            flash('You exported products list to CSV file "product_list_%s.csv"' % time_data, 'success')
+            return redirect(url_for('shop.shop_list'))
+    elif export_format == 'json':
+        with open('product_list_%s.json' % time_data, mode='w') as json_file:
+            for product_id in products_id:
+                product = Product.query.filter_by(id=product_id).first()
+                new_json_product = {
+                    'id': product.id,
+                    'name': product.name,
+                    'price': product.price,
+                    'quantity': product.quantity,
+                    'description': product.description
+                }
+                json.dump(new_json_product, json_file)
+        flash('You exported products list to JSON file "product_list_%s.json"' % time_data, 'success')
+        return redirect(url_for('shop.shop_list'))
+    else:
         return redirect(url_for('shop.shop_list'))
 
 
