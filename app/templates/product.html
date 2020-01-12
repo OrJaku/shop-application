@@ -3,6 +3,7 @@
 {% block h1 %}Product: <i>{{product.name}}</i> [ID: <b>{{ product.id }}]</b> {% endblock%}
 {% block page %}
  <body id="product">
+    <img src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'" border="0">
     <ul>
         <li>Product name: <b>{{ product.name }}</b> </li>
         <li>Price: <b>{{ product.price }}</b> </li>
@@ -26,6 +27,10 @@
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">
                     <br><textarea rows="5" cols="50"  name="description" >{{product.description}}</textarea><br>
                     <button name=product value={{product.name}} id='select' type="submit">Change description</button>
+                </form>
+                <form class="add-form" method = "POST" action="{{ url_for('shop.add_product_img')}}">
+                    <br><br><button name=product value={{product.name}} type="submit">Add product image</button>
+                    <input name=product_image_link type="text" >
                 </form>
                 <form class="rem-form" method = "POST" action="{{ url_for('shop.delete')}}">
                     <br><br><button name=product value={{product.name}} id='rem' type="submit" >Remove product</button>

@@ -226,6 +226,20 @@ def delete():
     return redirect(url_for('shop.shop_list'))
 
 
+@shop.route('/add_product_img', methods=['POST'])
+def add_product_img():
+    new_image = request.form['product_image_link']
+    product = request.form['product']
+    product = Product.query.filter_by(name=product).first()
+    product.image = new_image
+    db.session.add(product)
+    db.session.commit()
+    if current_user.is_authenticated:
+        return render_template('product.html', product=product, current_role=current_role(), role_req=role_req('admin'))
+    else:
+        return render_template('product.html', product=product)
+
+
 @shop.route('/delete_selected', methods=['POST'])
 def delete_selected():
     product_list_remove = request.form.getlist("remove_product")
@@ -257,7 +271,14 @@ def import_csv():
         return redirect(url_for('shop.shop_list'))
 
 
-@shop.route('/export_products', methods=['GET', 'POST'])
+@shop.route('/import_json', methods=['POST'])
+def import_json():
+    updated_file = request.files['json_file']
+    stream = json.load(updated_file)
+    return redirect(url_for('shop.shop_list'))
+
+
+@shop.route('/export_products', methods=['POST'])
 def export_products():
     products_id = db.session.query(Product.id).all()
     time_data = time.strftime("%Y%m%d-%H%M%S")
@@ -467,7 +488,6 @@ def clear_cart():
 
 @shop.route('/buy', methods=["POST"])
 def buy():
-    # buying_quantity = request.form['buy']
     buying_quantity = 1
     cart_products = Cart.query.filter_by(user_id=current_user.id)
     flash('Products:\n', 'success')
