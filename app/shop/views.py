@@ -26,13 +26,23 @@ def current_role():
 
 @shop.route('/', methods=['GET'])
 def home():
-    title = db.session.query(Posts.title).all()
-    title = ([x[0] for x in title])
-    posts_list = []
-    for item in title:
-        posts_list.append(item)
+    def get_items(model):
+        items = db.session.query(model).all()
+        items = ([n[0] for n in items])
+        items_list = []
+        for x in items:
+            items_list.append(x)
+        return items_list
+    products_list = []
+    products = get_items(Product.id)
+    products = products[0:3]
+    for product in products:
+        product = Product.query.filter_by(id=product).first()
+        products_list.append(product)
+
+    posts_list = get_items(Posts.title)
     if not posts_list:
-        return render_template("home.html")
+        return render_template("home.html", products_list=products_list)
     elif len(posts_list) == 1:
         page_post = posts_list[0]
     else:
@@ -44,21 +54,23 @@ def home():
     time_date = Posts.query.filter_by(id=post_db.id).first().time_date
     post_id = Posts.query.filter_by(id=post_db.id).first().id
     posts_list2 = []
+    number_of_visible_posts = 4
     i = 0
     if len(posts_list) == 0 or len(posts_list) == 1:
-        return render_template("home.html", title=title, post=post, user=user, post_id=post_id, time=time_date)
+        return render_template("home.html", title=title, post=post, user=user, post_id=post_id, time=time_date,
+                               products_list=products_list)
     elif len(posts_list) == 2:
         page_post2 = posts_list[0]
         post2 = Posts.query.filter_by(title=page_post2).first()
         posts_list2.append(post2)
     else:
-        while i != len(posts_list) - 1:
+        while i != number_of_visible_posts:
             i += 1
             page_post2 = posts_list[len(posts_list) - (i+1)]
             post2 = Posts.query.filter_by(title=page_post2).first()
             posts_list2.append(post2)
     return render_template("home.html", title=title, post=post, user=user, time=time_date,
-                           post_id=post_id, posts_list2=posts_list2)
+                           post_id=post_id, posts_list2=posts_list2, products_list=products_list)
 
 
 @shop.route('/register', methods=["POST", "GET"])

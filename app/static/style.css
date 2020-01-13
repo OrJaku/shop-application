@@ -174,13 +174,19 @@ background-color: #F3F2F5;
 width: 500px;
 }
 
-.posts {
+.sec_posts {
 border-style: groove;
 border-radius: 10px;
 border-width: 1px;
 border-color: #B4C1EA;
 background-color: #F3FDF5;
+
 width: 450px
+}
+
+.posts {
+float:right;
+margin-right: 0em
 }
 
 .author {
@@ -195,3 +201,20 @@ text-align: right;
 line-height: 0.3;
 }
 
+.admin_panel{
+float:right;
+border-style: groove;
+border-radius: 10px;
+border-width: 1px;
+border-color: #B4C1EA;
+margin-right: 20em;
+background-color: #F3FDF5
+}
+
+.product_list{
+float:left
+}
+
+.home_product{
+float:left
+}

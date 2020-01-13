@@ -2,7 +2,14 @@
 {% block title %}Home{% endblock%}
 {% block page %}
     <body id="home">
-      <br>
+        <div class="home_product">
+            {% for product in products_list %}
+             <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
+                 <img src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                     border="0" height="100" width="175"></a>
+            {% endfor %}
+        </div>
+      <div class="posts">
        <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
            <div class="main_post">
                <p>
@@ -16,7 +23,7 @@
                <p></p><div class="post_date">{{time}}</div></p>
            </div>
             {% for item in posts_list2 %}
-           <div class="posts">
+           <div class="sec_posts">
                 <p>
                     <b>{{item.title}}</b>
                     {% if current_user.is_authenticated %}
@@ -45,5 +52,6 @@
               <button form=main_post type="submit">Remove post</button>
               {% endif %}
           </form>
+      </div>
     </body>
 {% endblock %}

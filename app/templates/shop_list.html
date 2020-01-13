@@ -3,7 +3,7 @@
 {% block h1 %}Product list{% endblock%}
 {% block page %}
 <body id="shop_list">
-<div id="table" class="cb">
+<div id="table" class="product_list">
    <table border="0">
        <tr class="table_title">
             <th><p class="title">Name</p></th>
@@ -47,36 +47,38 @@
          </tr>
    </table><br><br>
 </div>
-    {% if current_user.is_authenticated %}
-        {% if current_role == role_req %}
-        <h2>Admin panel</h2>
-             <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
-                 <br> <input name="product_name" placeholder="Product name"/>
-                 <br> <input name="product_price" placeholder="Price"/>
-                 <br> <input name="product_quantity" placeholder="Quantity"/><br>
-                 <button id="add" type="submit">Add</button>
-             </form>
-             <form method="POST" action="{{ url_for('shop.import_csv') }}" enctype="multipart/form-data">
-                 <br> Select a file:
-                 <br><input type="file" name=csv_file accept=".csv">
-                 <br><button type="submit">Import file</button><br>
-             </form>
-            <form class="export-form" method="POST" action="{{ url_for('shop.export_products') }}">
-                 <button type="submit">Export file</button>
-                 <select class="form-control" name="format" id="format">
-                        <option value='csv'>csv </option>
-                        <option value='json'>json </option>
-                 </select><br>
-             </form>
-             <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
-                 <br> <input name="product" placeholder="Product to remove"/><br>
-                 <button id="rem" type="submit">Delete</button>
-             </form>
-             <form class="rem-form" method="POST">
-                 <button form=checkbox_id type="submit">Delete marked</button><br><br>
-             </form>
+    <div class="admin_panel">
+        {% if current_user.is_authenticated %}
+            {% if current_role == role_req %}
+            <h2>Admin panel</h2>
+                 <form class="add-form" method="POST" action="{{ url_for('shop.add') }}">
+                     <br> <input name="product_name" placeholder="Product name"/>
+                     <br> <input name="product_price" placeholder="Price"/>
+                     <br> <input name="product_quantity" placeholder="Quantity"/><br>
+                     <button id="add" type="submit">Add</button>
+                 </form>
+                 <form method="POST" action="{{ url_for('shop.import_csv') }}" enctype="multipart/form-data">
+                     <br> Select a file:
+                     <br><input type="file" name=csv_file accept=".csv">
+                     <br><button type="submit">Import file</button><br>
+                 </form>
+                <form class="export-form" method="POST" action="{{ url_for('shop.export_products') }}">
+                     <button type="submit">Export file</button>
+                     <select class="form-control" name="format" id="format">
+                            <option value='csv'>csv </option>
+                            <option value='json'>json </option>
+                     </select><br>
+                 </form>
+                 <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
+                     <br> <input name="product" placeholder="Product to remove"/><br>
+                     <button id="rem" type="submit">Delete</button>
+                 </form>
+                 <form class="rem-form" method="POST">
+                     <button form=checkbox_id type="submit">Delete marked</button><br><br>
+                 </form>
 
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 </body>
 {% endblock %}

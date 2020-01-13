@@ -14,7 +14,7 @@
     <br><br><p><b>Your posts:</b></p>
     <form  class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
         {% for post in posts %}
-        <div class="posts">
+        <div class="sec_posts">
             <p><b>{{post.title}}</b><input type="checkbox" name="remove_post" value={{post.id}}></p>
             <p>{{post.post}}</p>
             <p>{{post.user}}</p>

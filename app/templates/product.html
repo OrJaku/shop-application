@@ -3,7 +3,8 @@
 {% block h1 %}Product: <i>{{product.name}}</i> [ID: <b>{{ product.id }}]</b> {% endblock%}
 {% block page %}
  <body id="product">
-    <img src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'" border="0">
+    <img src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'" border="0"
+         height="300" width="510">
     <ul>
         <li>Product name: <b>{{ product.name }}</b> </li>
         <li>Price: <b>{{ product.price }}</b> </li>
