@@ -44,14 +44,18 @@ def home():
         rnd_products_list.append(y)
     first_product = rnd_products_list[0]
     rnd_products_list = rnd_products_list[1:4]
+    return render_template("home.html", products_list=rnd_products_list, first_product=first_product)
 
-    posts = db.session.query(Posts.title).all()
-    posts = ([n[0] for n in posts])
+
+@shop.route('/posts', methods=["GET"])
+def posts():
+    get_posts = db.session.query(Posts.title).all()
+    get_posts = ([n[0] for n in get_posts])
     posts_list = []
-    for post in posts:
+    for post in get_posts:
         posts_list.append(post)
     if not posts_list:
-        return render_template("home.html", products_list=rnd_products_list, first_product=first_product)
+        return render_template("posts.html")
     elif len(posts_list) == 1:
         page_post = posts_list[0]
     else:
@@ -66,8 +70,7 @@ def home():
     number_of_visible_posts = 4
     i = 0
     if len(posts_list) == 0 or len(posts_list) == 1:
-        return render_template("home.html", title=title, post=post, user=user, post_id=post_id, time=time_date,
-                               products_list=rnd_products_list, first_product=first_product)
+        return render_template("posts.html", title=title, post=post, user=user, post_id=post_id, time=time_date)
     elif len(posts_list) == 2:
         page_post2 = posts_list[0]
         post2 = Posts.query.filter_by(title=page_post2).first()
@@ -78,9 +81,8 @@ def home():
             page_post2 = posts_list[len(posts_list) - (i+1)]
             post2 = Posts.query.filter_by(title=page_post2).first()
             posts_list2.append(post2)
-    return render_template("home.html", title=title, post=post, user=user, time=time_date,
-                           post_id=post_id, posts_list2=posts_list2, products_list=rnd_products_list,
-                           first_product=first_product)
+    return render_template("posts.html", title=title, post=post, user=user, time=time_date,
+                           post_id=post_id, posts_list2=posts_list2)
 
 
 @shop.route('/register', methods=["POST", "GET"])
@@ -407,14 +409,14 @@ def add_post():
     title = request.form['title']
     if not title:
         flash("You have to add title", 'error')
-        return redirect(url_for('shop.home'))
+        return redirect(url_for('shop.posts'))
     elif title in title_list:
         flash("Post with the same title does exist", 'error')
-        return redirect(url_for('shop.home'))
+        return redirect(url_for('shop.posts'))
     post = request.form['post']
     if not post:
         flash("You have to add some text", 'error')
-        return redirect(url_for('shop.home'))
+        return redirect(url_for('shop.posts'))
     if current_user.is_anonymous:
         user = "Guest"
     else:
@@ -424,7 +426,7 @@ def add_post():
     new_post = Posts(title=title, post=post, user=user, time=seconds, time_date=time_date)
     db.session.add(new_post)
     db.session.commit()
-    return redirect(url_for('shop.home'))
+    return redirect(url_for('shop.posts'))
 
 
 @shop.route('/remove_post', methods=['GET', 'POST'])
@@ -439,7 +441,7 @@ def remove_post():
     else:
         for item in rem_post:
             post_user = Posts.query.filter_by(id=item).first().user
-            post_user_list.append(post_user)  # post.user
+            post_user_list.append(post_user)
     if current_role() == role_req('admin'):
         if request.method == "POST":
             if 'all_posts_remove' in rem_post:
@@ -451,7 +453,7 @@ def remove_post():
                     Posts.query.filter_by(id=item).delete()
                     db.session.commit()
                 flash(f'Post: {rem_post} has been removed', 'success')
-            return redirect(url_for('shop.home'))
+            return redirect(url_for('shop.posts'))
     elif user in post_user_list:
         for item in rem_post:
             post_user = Posts.query.filter_by(id=item).first().user
@@ -463,10 +465,10 @@ def remove_post():
             Posts.query.filter_by(id=item).delete()
             db.session.commit()
         flash(f'Post: {post_user_filtered_list} has been removed', 'success')
-        return redirect(url_for("shop.home"))
+        return redirect(url_for("shop.posts"))
     else:
         flash("You do not have access to remove this post", 'error')
-        return redirect(url_for("shop.home"))
+        return redirect(url_for("shop.posts"))
 
 
 @shop.route('/cart', methods=["POST", "GET"])

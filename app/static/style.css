@@ -65,7 +65,8 @@ body#logout a#logout,
 body#login a#login,
 body#users a#users,
 body#profile a#profile,
-body#cart a#cart
+body#cart a#cart,
+body#posts a#posts
 {
 	color: #FFFFFF;
 	background: #87CEEB;
@@ -185,8 +186,12 @@ width: 450px
 }
 
 .posts {
-float:right;
-margin-right: 10px
+float:left;
+margin-left: 8px
+}
+
+.add_post {
+float:right
 }
 
 .author {
@@ -216,5 +221,9 @@ float:left
 }
 
 .home_product{
+float:left
+}
+
+.home_info_main_product{
 float:left
 }
