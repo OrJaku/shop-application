@@ -3,6 +3,9 @@
 {% block page %}
     <body id="home">
         <div class="home_product">
+            <a href="{{ url_for('shop.shop_list',product=first_product.name)}}" >
+                 <img src="{{first_product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                     border="0" height="300" width="560"></a><br><br>
             {% for product in products_list %}
              <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
                  <img src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"

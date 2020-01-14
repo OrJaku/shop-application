@@ -8,6 +8,7 @@ import logging
 import io
 import csv
 import json
+import random
 
 shop = Blueprint('shop', __name__, template_folder='templates')
 
@@ -26,23 +27,31 @@ def current_role():
 
 @shop.route('/', methods=['GET'])
 def home():
-    def get_items(model):
-        items = db.session.query(model).all()
-        items = ([n[0] for n in items])
-        items_list = []
-        for x in items:
-            items_list.append(x)
-        return items_list
+    products = db.session.query(Product.id).all()
+    products = ([n[0] for n in products])
     products_list = []
-    products = get_items(Product.id)
-    products = products[0:3]
     for product in products:
         product = Product.query.filter_by(id=product).first()
         products_list.append(product)
+    random_numbers = random.sample([i for i in range(len(products_list))], k=len(products_list))
+    list_with_rnd_numbers = []
+    for x, y in zip(random_numbers, products_list):
+        result = (x, y)
+        list_with_rnd_numbers.append(result)
+    sorted_list = sorted(list_with_rnd_numbers)
+    rnd_products_list = []
+    for x, y in sorted_list:
+        rnd_products_list.append(y)
+    first_product = rnd_products_list[0]
+    rnd_products_list = rnd_products_list[1:4]
 
-    posts_list = get_items(Posts.title)
+    posts = db.session.query(Posts.title).all()
+    posts = ([n[0] for n in posts])
+    posts_list = []
+    for post in posts:
+        posts_list.append(post)
     if not posts_list:
-        return render_template("home.html", products_list=products_list)
+        return render_template("home.html", products_list=rnd_products_list, first_product=first_product)
     elif len(posts_list) == 1:
         page_post = posts_list[0]
     else:
@@ -58,7 +67,7 @@ def home():
     i = 0
     if len(posts_list) == 0 or len(posts_list) == 1:
         return render_template("home.html", title=title, post=post, user=user, post_id=post_id, time=time_date,
-                               products_list=products_list)
+                               products_list=rnd_products_list, first_product=first_product)
     elif len(posts_list) == 2:
         page_post2 = posts_list[0]
         post2 = Posts.query.filter_by(title=page_post2).first()
@@ -70,7 +79,8 @@ def home():
             post2 = Posts.query.filter_by(title=page_post2).first()
             posts_list2.append(post2)
     return render_template("home.html", title=title, post=post, user=user, time=time_date,
-                           post_id=post_id, posts_list2=posts_list2, products_list=products_list)
+                           post_id=post_id, posts_list2=posts_list2, products_list=rnd_products_list,
+                           first_product=first_product)
 
 
 @shop.route('/register', methods=["POST", "GET"])
