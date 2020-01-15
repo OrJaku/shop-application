@@ -3,6 +3,7 @@ from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, ChangePasswordForm
 from ..models import Product, User, Role, UserRoles, Posts, Cart
+import sqlalchemy.exc
 import time
 import logging
 import io
@@ -42,9 +43,20 @@ def home():
     rnd_products_list = []
     for x, y in sorted_list:
         rnd_products_list.append(y)
-    first_product = rnd_products_list[0]
-    rnd_products_list = rnd_products_list[1:4]
-    return render_template("home.html", products_list=rnd_products_list, first_product=first_product)
+    try:
+        first_product = rnd_products_list[0]
+        products_list_1 = rnd_products_list[1:4]
+        products_list_2 = rnd_products_list[5:8]
+        products_list_3 = rnd_products_list[9:12]
+    except IndexError:
+        flash('There is no product there', 'success')
+        first_product = []
+        products_list_1 = []
+        products_list_2 = []
+        products_list_3 = []
+
+    return render_template("home.html", products_list_1=products_list_1, products_list_2=products_list_2,
+                           products_list_3=products_list_3, first_product=first_product)
 
 
 @shop.route('/posts', methods=["GET"])
@@ -170,8 +182,8 @@ def profile(username):
     check_user = db.session.query(Posts.user).all()
     check_user = ([x[0] for x in check_user])
     if current_user.username in check_user:
-        posts = Posts.query.filter_by(user=current_user.username).all()
-        return render_template('profile.html', profile=user, posts=posts)
+        user_posts = Posts.query.filter_by(user=current_user.username).all()
+        return render_template('profile.html', profile=user, posts=user_posts)
     else:
         return render_template('profile.html', profile=user)
 
@@ -287,10 +299,14 @@ def import_csv():
                     flash('Some cells in file are empty, please check fill of columns and rows'
                           '(product name, price and quantity)', 'error')
                 else:
-                    new_product = Product(name=row[0], price=row[1], quantity=int(row[2]), description=row[3])
-                    db.session.add(new_product)
-                    flash('Added product: %s' % new_product.name, 'success')
-                    db.session.commit()
+                    try:
+                        new_product = Product(name=row[0], price=row[1], quantity=row[2], description=row[3],
+                                              image=row[4])
+                        db.session.add(new_product)
+                        flash('Added product: %s' % new_product.name, 'success')
+                        db.session.commit()
+                    except sqlalchemy.exc.DataError:
+                        flash("Data problem, products have not benn added - check column fill correctness", 'error')
             return redirect(url_for('shop.shop_list'))
         return redirect(url_for('shop.shop_list'))
 
@@ -309,8 +325,17 @@ def export_products():
     export_format = request.form['format']
     if export_format == 'csv':
         products_to_csv = []
-        with open('product_list_%s.csv' % time_data, mode='w') as csv_file:
+        with open('output/product_list_%s.csv' % time_data, mode='w') as csv_file:
             new_row = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            first_row = [
+                "ID",
+                "Name",
+                "Price",
+                "Quantity",
+                "Description",
+                "Image link",
+                ]
+            new_row.writerow(first_row)
             for product_id in products_id:
                 product = Product.query.filter_by(id=product_id).first()
                 prod_id = product.id
@@ -318,13 +343,21 @@ def export_products():
                 prod_price = product.price
                 prod_quantity = product.quantity
                 prod_description = product.description
-                product_to_csv = [prod_id, prod_name, prod_price, prod_quantity, prod_description]
+                prod_image_link = product.image
+                product_to_csv = [
+                    prod_id,
+                    prod_name,
+                    prod_price,
+                    prod_quantity,
+                    prod_description,
+                    prod_image_link,
+                ]
                 new_row.writerow(product_to_csv)
                 products_to_csv.append(product_to_csv)
             flash('You exported products list to CSV file "product_list_%s.csv"' % time_data, 'success')
             return redirect(url_for('shop.shop_list'))
     elif export_format == 'json':
-        with open('product_list_%s.json' % time_data, mode='w') as json_file:
+        with open('output/product_list_%s.json' % time_data, mode='w') as json_file:
             for product_id in products_id:
                 product = Product.query.filter_by(id=product_id).first()
                 new_json_product = {
@@ -332,7 +365,8 @@ def export_products():
                     'name': product.name,
                     'price': product.price,
                     'quantity': product.quantity,
-                    'description': product.description
+                    'description': product.description,
+                    'image link': product.image,
                 }
                 json.dump(new_json_product, json_file)
         flash('You exported products list to JSON file "product_list_%s.json"' % time_data, 'success')

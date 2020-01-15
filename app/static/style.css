@@ -220,10 +220,11 @@ background-color: #F3FDF5
 float:left
 }
 
-.home_product{
+.main_img{
 float:left
 }
 
-.home_info_main_product{
-float:left
+.additional_img{
+margin-top: 0px; margin-bottom: 0px; margin-left: 8px; margin-right: 2px;
 }
+
