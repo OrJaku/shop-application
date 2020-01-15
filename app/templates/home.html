@@ -2,59 +2,34 @@
 {% block title %}Home{% endblock%}
 {% block page %}
     <body id="home">
-        <div class="home_product">
-            <a href="{{ url_for('shop.shop_list',product=first_product.name)}}" >
-                 <img src="{{first_product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
-                     border="0" height="300" width="560"></a><br><br>
-            {% for product in products_list %}
-             <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
-                 <img src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
-                     border="0" height="100" width="175"></a>
-            {% endfor %}
-        </div>
-      <div class="posts">
-       <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
-           <div class="main_post">
-               <p>
-                   <b>{{title}} </b>
-               {% if current_user.is_authenticated %}
-                   <input type="checkbox" name='remove_post' value={{post_id}}><i>{{post_id}}</i>
-               </p>
-               {% endif %}
-               <p>{{post}}</p>
-               <p class="author"><i>Author: <b>{{user}}</b></i></p>
-               <p></p><div class="post_date">{{time}}</div></p>
-           </div>
-            {% for item in posts_list2 %}
-           <div class="sec_posts">
-                <p>
-                    <b>{{item.title}}</b>
-                    {% if current_user.is_authenticated %}
-                    <input type="checkbox" name="remove_post" value={{item.id}} ><i>{{item.id}}</i>
-                    {% endif %}
-               </p>
-               <p>{{item.post}}</p>
-               <p class="author"><i>Author: <b>{{item.user}}</b></i></p>
-               <p><div class="post_date">{{item.time_date}}</div></p>
-           </div>
-           {% endfor %}
-           {% if current_user.is_authenticated %}
-           <label><input type="checkbox" name="remove_post" value="all_posts_remove">All</label>
-           {% endif %}
-       </form>
+        <div class="products">
+            <p>
+                <a href="{{ url_for('shop.shop_list',product=first_product.name)}}" >
+                 <img class="main_img" src="{{first_product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                     border="0" height="300" width="560"></a></div>
+                    {% for product in products_list_1 %}
+                        <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
+                        <img class="additional_img"src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                                 border="0" height="100" width="175"></a>
+                {% endfor %}
+                {% for product in products_list_2 %}
+                        <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
+                        <img class="additional_img"src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                                 border="0" height="100" width="175"></a>
+                {% endfor %}
+                {% for product in products_list_3 %}
+                        <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
+                        <img class="additional_img"src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                                 border="0" height="100" width="175"></a>
+                {% endfor %}
+            </p>
 
-      <div class="add_post">
-     <form id = 'form2' class="add-form" method = "POST" action="{{ url_for('shop.add_post')}}">
-         <br><textarea rows="1" cols="70"  name="title" placeholder="Title"></textarea>
-         <br><textarea rows="8" cols="70"  name="post" placeholder="Put text here..."></textarea><br>
-         <button id='add' name=post type="submit"  >Add new post</button>
-     </form>
-      </div>
-          <form class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
-              {% if current_user.is_authenticated %}
-              <button form=main_post type="submit">Remove post</button>
-              {% endif %}
-          </form>
-      </div>
+
     </body>
+    <ul>
+        <li><b>{{first_product.name}}</b></li><br>
+        <li>Price: <b>{{first_product.price}}</b></li><br>
+          {{first_product.description}}
+    </ul>
+
 {% endblock %}
