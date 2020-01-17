@@ -16,7 +16,7 @@
                 {% if current_role == role_req %}
                     <form class="add-form" method = "POST" action="{{ url_for('shop.product_quantity')}}">
                         <input id="quantity" name=new_quantity value={{product.quantity}}>
-                        <button name=product_name value={{product.name}} type="submit">Change</button>
+                        <button name=product_id value={{product.id}} type="submit">Change</button>
                     </form>
                  {% endif %}
             {% endif %}
@@ -27,21 +27,21 @@
             {% if current_role == role_req %}
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">
                     <br><textarea rows="5" cols="50"  name="description" >{{product.description}}</textarea><br>
-                    <button name=product value={{product.name}} id='select' type="submit">Change description</button>
+                    <button name=product_id value={{product.id}} id='select' type="submit">Change description</button>
                 </form>
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_product_img')}}">
-                    <br><br><button name=product value={{product.name}} type="submit">Add product image</button>
+                    <br><br><button name=product_id value={{product.id}} type="submit">Add product image</button>
                     <input name=product_image_link type="text" >
                 </form>
                 <form class="rem-form" method = "POST" action="{{ url_for('shop.delete')}}">
-                    <br><br><button name=product value={{product.name}} id='rem' type="submit" >Remove product</button>
+                    <br><br><button name=product_id value={{product.id}} id='rem' type="submit" >Remove product</button>
                 </form>
             {% endif %}
          {% endif %}
         </li>
         <li>
             <form class="add-form" method = "POST" action="{{ url_for('shop.cart')}}">
-                <br><br><button name=product value={{product.name}} id='add' type="submit" >Add to cart</button>
+                <br><br><button name=product_id value={{product.id}} id='add' type="submit" >Add to cart</button>
             </form>
         </li>
     </ul>

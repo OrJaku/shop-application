@@ -46,8 +46,15 @@ def home():
     try:
         first_product = rnd_products_list[0]
         products_list_1 = rnd_products_list[1:4]
-        products_list_2 = rnd_products_list[5:8]
-        products_list_3 = rnd_products_list[9:12]
+        products_list_2 = rnd_products_list[4:7]
+        products_list_3 = rnd_products_list[7:10]
+
+        print("all", rnd_products_list)
+        print("first", first_product)
+        print("sec", products_list_1)
+        print("thr", products_list_2)
+        print("four", products_list_3)
+
     except IndexError:
         flash('There is no product there', 'success')
         first_product = []
@@ -148,7 +155,7 @@ def logout():
 def users(username=None):
     if current_role() == role_req('guest') or role_req('admin'):
         users_list = db.session.query(User).all()
-        if username is not None:
+        if username:
             user = User.query.filter_by(username=username).first_or_404()
             role_temp_id = UserRoles.query.filter_by(user_id=user.id).first().role_id
             role_name = Role.query.filter_by(id=role_temp_id).first().name
@@ -250,23 +257,23 @@ def add():
 
 @shop.route('/delete', methods=['POST'])
 def delete():
-    product_remove = request.form['product']
-    products_list = db.session.query(Product.name).all()
+    product_id = int(request.form['product_id'])
+    products_list = db.session.query(Product.id).all()
     products_list = ([x[0] for x in products_list])
-    if product_remove in products_list:
-        Product.query.filter_by(name=product_remove).delete()
-        flash('Product %s has been removed' % product_remove, 'success')
+    if product_id in products_list:
+        Product.query.filter_by(id=product_id).delete()
+        flash('Product %s has been removed' % product_id, 'success')
         db.session.commit()
     else:
-        flash('Product %s is not on list' % product_remove, 'error')
+        flash('Product %s is not on list' % product_id, 'error')
     return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/add_product_img', methods=['POST'])
 def add_product_img():
     new_image = request.form['product_image_link']
-    product = request.form['product']
-    product = Product.query.filter_by(name=product).first()
+    product_id = request.form['product_id']
+    product = Product.query.filter_by(id=product_id).first()
     product.image = new_image
     db.session.add(product)
     db.session.commit()
@@ -410,9 +417,9 @@ def shop_list(product=None):
 
 @shop.route('/product_quantity', methods=['GET', 'POST'])
 def product_quantity():
-    product = request.form['product_name']
+    product_id = request.form['product_id']
     new_quantity = request.form['new_quantity']
-    product = Product.query.filter_by(name=product).first()
+    product = Product.query.filter_by(id=product_id).first()
     product.quantity = new_quantity
     db.session.add(product)
     db.session.commit()
@@ -425,8 +432,8 @@ def product_quantity():
 @shop.route('/add_description/', methods=['GET', 'POST'])
 def add_description():
     new_description = request.form['description']
-    product = request.form['product']
-    product = Product.query.filter_by(name=product).first()
+    product_id = request.form['product_id']
+    product = Product.query.filter_by(id=product_id).first()
     product.description = new_description
     db.session.add(product)
     db.session.commit()
@@ -508,23 +515,20 @@ def remove_post():
 @shop.route('/cart', methods=["POST", "GET"])
 @login_required
 def cart():
-    ip = request.remote_addr
-    cart_list_unfiltered_id = db.session.query(Cart.product_id)
-    cart_list_id = cart_list_unfiltered_id.filter_by(user_id=current_user.id)
-    user_cart_list_id = ([x[0] for x in cart_list_id])
+    current_cart_unfiltered_id = db.session.query(Cart.product_id)
+    current_cart_id = current_cart_unfiltered_id.filter_by(user_id=current_user.id)
+    user_cart_list_id = ([x[0] for x in current_cart_id])
     user_cart_list = []
-    user_cart_list_name = []
     for product_id in user_cart_list_id:
         product = Product.query.filter_by(id=product_id).first()
         user_cart_list.append(product)
-        user_cart_list_name.append(product.name)
     if request.method == "POST":
-        product_name = request.form['product']
-        if product_name in user_cart_list_name:
-            flash(f'{product_name} already is in your shopping cart', 'info')
-            return redirect(url_for("shop.cart"))
+        product_id = request.form['product_id']
+        if int(product_id) in user_cart_list_id:
+            flash(f'This product is already in your shopping cart', 'info')
+            return render_template("product.html", product=product)
         else:
-            product = Product.query.filter_by(name=product_name).first()
+            product = Product.query.filter_by(id=product_id).first()
             product_id = product.id
             user_id = current_user.id
             new_product = Cart(user_id=user_id, product_id=product_id, quantity=1)
@@ -532,8 +536,7 @@ def cart():
             db.session.commit()
             return redirect(url_for("shop.cart"))
     else:
-        return render_template("cart.html", ip=ip, user_cart_list=user_cart_list,
-                               user_cart_list_name=user_cart_list_name)
+        return render_template("cart.html", user_cart_list=user_cart_list)
 
 
 @shop.route('/clear_cart', methods=["POST"])

@@ -3,33 +3,27 @@
 {% block page %}
     <body id="home">
         <div class="products">
-            <p>
-                <a href="{{ url_for('shop.shop_list',product=first_product.name)}}" >
+                <p><a href="{{ url_for('shop.shop_list',product=first_product.name)}}" >
                  <img class="main_img" src="{{first_product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
-                     border="0" height="300" width="560"></a></div>
-                    {% for product in products_list_1 %}
+                      border="0" height="300" width="560"></a></p>
+        </div>
+                <p>{% for product in products_list_1 %}
                         <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
                         <img class="additional_img"src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
-                                 border="0" height="100" width="175"></a>
-                {% endfor %}
-                {% for product in products_list_2 %}
+                             border="0" height="100" width="175"></a>
+                {% endfor %}</p>
+                <p>{% for product in products_list_2 %}
                         <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
                         <img class="additional_img"src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
-                                 border="0" height="100" width="175"></a>
-                {% endfor %}
-                {% for product in products_list_3 %}
+                             border="0" height="100" width="175"></a>
+                {% endfor %}</p>
+                <p>{% for product in products_list_3 %}
                         <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
                         <img class="additional_img"src="{{product.image}}" alt="// PIC //" onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
-                                 border="0" height="100" width="175"></a>
-                {% endfor %}
-            </p>
+                             border="0" height="100" width="175"></a>
+                {% endfor %}</p>
 
 
     </body>
-    <ul>
-        <li><b>{{first_product.name}}</b></li><br>
-        <li>Price: <b>{{first_product.price}}</b></li><br>
-          {{first_product.description}}
-    </ul>
 
 {% endblock %}
