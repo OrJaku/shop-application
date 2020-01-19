@@ -45,21 +45,20 @@ def home():
         rnd_products_list.append(y)
     try:
         first_product = rnd_products_list[0]
-        products_list_1 = rnd_products_list[1:4]
-        products_list_2 = rnd_products_list[4:7]
-        products_list_3 = rnd_products_list[7:10]
-
-        print("all", rnd_products_list)
-        print("first", first_product)
-        print("sec", products_list_1)
-        print("thr", products_list_2)
-        print("four", products_list_3)
-
     except IndexError:
         flash('There is no product there', 'success')
         first_product = []
+    try:
+        products_list_1 = rnd_products_list[1:4]
+    except IndexError:
         products_list_1 = []
+    try:
+        products_list_2 = rnd_products_list[4:7]
+    except IndexError:
         products_list_2 = []
+    try:
+        products_list_3 = rnd_products_list[7:10]
+    except IndexError:
         products_list_3 = []
 
     return render_template("home.html", products_list_1=products_list_1, products_list_2=products_list_2,

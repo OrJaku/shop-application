@@ -6,13 +6,20 @@
      <div id="table" class="cb">
        <table border="0">
            <tr class="table_title">
-                <th><p class="title">Name</p></th>
-                <th><p class="title">Price</p></th>
+               <th><p class="title"></p></th>
+               <th><p class="title">Name</p></th>
+               <th><p class="title">Price</p></th>
                <th><p class="title">Quantity</p></th>
            </tr>
            {%for product in user_cart_list%}
            <tr class="table_col">
                 <td class="table_col">
+                    <a href="{{ url_for('shop.shop_list',product=product.name)}}" >
+                        <img class="main_img" src="{{product.image}}" alt="// PIC //"
+                             onerror="this.src='https://i.ibb.co/mqT6phW/pic-x.png'"
+                                border="0" height="60" width="88"></a>
+                </td>
+               <td class="table_col">
                     <b><a href="{{ url_for('shop.shop_list',product=product.name)}}" >{{ product.name }}</a></b>
                 </td>
                 <td class="table_col">
@@ -23,6 +30,17 @@
                 </td>
            </tr>
            {%endfor%}
+            <tr class="table_title">
+                <th><p class="title"></p></th>
+               <th><p class="title"></p></th>
+               <th><p class="title">
+                   {%for product in user_cart_list%}
+
+                   {%endfor%}
+
+                    </p></th>
+               <th><p class="title"></p></th>
+           </tr>
        </table>
      </div>
      <form  class="buy-form" method = "POST" action="{{ url_for('shop.buy')}}">
