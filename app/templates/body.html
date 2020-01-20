@@ -6,6 +6,15 @@
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class=flashes>
+                {% for category, message in messages %}
+                        <div id="{{ category }}"><span>{{ message }}</span></div>
+                {% endfor %}
+            </div>
+        {% endif %}
+      {% endwith %}
     <img src="https://previews.dropbox.com/p/thumb/AAmRk9nwH4LzfK3Xo_Xpv7ZNQHrVy7GYbF-0akHho6fbSVY8_mQ6j0HZPxkMy9p43HBw2jl57Ks5o2ryhiA5JvK_ZYicl-nu2V7sCog8Zt_LwmK4Ef_BUlY_zWgNnvKY85CeAb-L2S0rhpZkADPFaZR2UNbtnoeZ9M6cGcfWHiQGVYv74j9txiyUoRKzhQt9Eh21SLn5SOEAc2RiZ8Le193iQe_wjApLvvs2_Rtmgh-axZAZ50CdQM7nTakZOIBDfC499Xs0rdVAmgihzN21cL8AqY96vzKrzn-QmJWypjcMGtXt2ijbK-eSuQzd3X6YWY3eGQHeks7LFyJeGqLWlLpT/p.png?fv_content=true&size_mode=5"
     alt="LOGO">
     <div id="menu" class="cb">
@@ -30,13 +39,5 @@
    {% block page %}{% endblock %}
   </div>
   </body>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for category, message in messages %}
-      <li id="{{ category }}">{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+
 </html>

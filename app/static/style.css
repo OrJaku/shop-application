@@ -220,3 +220,10 @@ background-color: #F3FDF5
 float:left
 }
 
+.flashes{
+margin-top: 5px; margin-bottom: 5px;
+background-size: 10em;
+text-align:center;
+background-color: #87CEEB
+
+}
