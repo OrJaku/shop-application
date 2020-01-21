@@ -57,9 +57,9 @@
                      <br> <input name="product_quantity" placeholder="Quantity"/><br>
                      <button id="add" type="submit">Add</button>
                  </form>
-                 <form method="POST" action="{{ url_for('shop.import_csv') }}" enctype="multipart/form-data">
+                 <form method="POST" action="{{ url_for('shop.import_products') }}" enctype="multipart/form-data">
                      <br> Select a file:
-                     <br><input type="file" name=csv_file accept=".csv">
+                     <br><input type="file" name=file accept=".csv, .json">
                      <br><button type="submit">Import file</button><br>
                  </form>
                 <form class="export-form" method="POST" action="{{ url_for('shop.export_products') }}">

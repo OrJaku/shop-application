@@ -291,37 +291,41 @@ def delete_selected():
     return redirect(url_for('shop.shop_list'))
 
 
-@shop.route('/import_csv', methods=['GET', 'POST'])
-def import_csv():
+@shop.route('/import_products', methods=['GET', 'POST'])
+def import_products():
     if request.method == "POST":
-        updated_file = request.files['csv_file']
-        if not updated_file:
-            flash("You don't chose CSV file or file is empty", 'info')
-        else:
-            stream = io.StringIO(updated_file.stream.read().decode("utf-8"), newline=None)
-            data_file = list(csv.reader(stream, delimiter=','))
-            for row in data_file[1:]:
-                if row[0] == "" or row[1] == "" or row[2] == "":
-                    flash('Some cells in file are empty, please check fill of columns and rows'
-                          '(product name, price and quantity)', 'error')
-                else:
-                    try:
-                        new_product = Product(name=row[0], price=row[1], quantity=row[2], description=row[3],
-                                              image=row[4])
-                        db.session.add(new_product)
-                        flash('Added product: %s' % new_product.name, 'success')
-                        db.session.commit()
-                    except sqlalchemy.exc.DataError:
-                        flash("Data problem, products have not benn added - check column fill correctness", 'error')
+        updated_file = request.files['file']
+        file_name = updated_file.filename
+        extension = file_name.split('.')[-1]
+        print("TEST0", updated_file)
+        if extension == "csv":
+            if not updated_file:
+                flash("You don't chose CSV file or file is empty", 'info')
+            else:
+                stream = io.StringIO(updated_file.stream.read().decode("utf-8"), newline=None)
+                data_file = list(csv.reader(stream, delimiter=','))
+                for row in data_file[1:]:
+                    if row[0] == "" or row[1] == "" or row[2] == "":
+                        flash('Some cells in file are empty, please check fill of columns and rows'
+                              '(product name, price and quantity)', 'error')
+                    else:
+                        try:
+                            new_product = Product(name=row[0], price=row[1], quantity=row[2], description=row[3],
+                                                  image=row[4])
+                            db.session.add(new_product)
+                            db.session.commit()
+                        except sqlalchemy.exc.DataError:
+                            flash("Data problem, products have not been added - check column fill correctness", 'error')
+                        except IndexError:
+                            flash("Data problem, some column is empty", 'error')
+                flash('Added {} product/s' .format(len(data_file[1:])), 'success')
+                return redirect(url_for('shop.shop_list'))
             return redirect(url_for('shop.shop_list'))
-        return redirect(url_for('shop.shop_list'))
-
-
-@shop.route('/import_json', methods=['POST'])
-def import_json():
-    updated_file = request.files['json_file']
-    stream = json.load(updated_file)
-    return redirect(url_for('shop.shop_list'))
+        elif extension == "json":
+            # stream = json.load(updated_file)
+            return redirect(url_for('shop.shop_list'))
+        else:
+            return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/export_products', methods=['POST'])
