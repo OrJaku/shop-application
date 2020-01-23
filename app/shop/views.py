@@ -295,13 +295,14 @@ def delete_selected():
 def import_products():
     if request.method == "POST":
         updated_file = request.files['file']
-        file_name = updated_file.filename
-        extension = file_name.split('.')[-1]
-        print("TEST0", updated_file)
-        if extension == "csv":
-            if not updated_file:
-                flash("You don't chose CSV file or file is empty", 'info')
-            else:
+        if not updated_file:
+            flash("You didn't choose CSV/JSON file or file is empty", 'info')
+            return redirect(url_for('shop.shop_list'))
+        else:
+            file_name = updated_file.filename
+            extension = file_name.split('.')[-1]
+            print("TEST0", updated_file)
+            if extension == "csv":
                 stream = io.StringIO(updated_file.stream.read().decode("utf-8"), newline=None)
                 data_file = list(csv.reader(stream, delimiter=','))
                 for row in data_file[1:]:
@@ -320,12 +321,13 @@ def import_products():
                             flash("Data problem, some column is empty", 'error')
                 flash('Added {} product/s' .format(len(data_file[1:])), 'success')
                 return redirect(url_for('shop.shop_list'))
-            return redirect(url_for('shop.shop_list'))
-        elif extension == "json":
-            # stream = json.load(updated_file)
-            return redirect(url_for('shop.shop_list'))
-        else:
-            return redirect(url_for('shop.shop_list'))
+            elif extension == "json":
+                stream = json.load(updated_file)
+                print(stream)
+                return redirect(url_for('shop.shop_list'))
+            else:
+                return redirect(url_for('shop.shop_list'))
+    return redirect(url_for('shop.shop_list'))
 
 
 @shop.route('/export_products', methods=['POST'])
@@ -368,6 +370,7 @@ def export_products():
             return redirect(url_for('shop.shop_list'))
     elif export_format == 'json':
         with open('output/product_list_%s.json' % time_data, mode='w') as json_file:
+            output = []
             for product_id in products_id:
                 product = Product.query.filter_by(id=product_id).first()
                 new_json_product = {
@@ -378,7 +381,8 @@ def export_products():
                     'description': product.description,
                     'image link': product.image,
                 }
-                json.dump(new_json_product, json_file)
+                output.append(new_json_product)
+            json.dump(output, json_file)
         flash('You exported products list to JSON file "product_list_%s.json"' % time_data, 'success')
         return redirect(url_for('shop.shop_list'))
     else:
