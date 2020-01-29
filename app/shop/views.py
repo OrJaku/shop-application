@@ -393,26 +393,36 @@ def export_products():
 @shop.route('/list/<product>')
 def shop_list(product=None):
     if product is None:
-        products_list = db.session.query(Product).all()
-        products_name = db.session.query(Product.name).all()
-        products_name = ([x[0] for x in products_name])
-        products_price = db.session.query(Product.price).all()
-        products_price = ([x[0] for x in products_price])
         products_id = db.session.query(Product.id).all()
         products_id = ([x[0] for x in products_id])
-        products_quantity = db.session.query(Product.quantity).all()
-        products_quantity = ([x[0] for x in products_quantity])
-        logging.info("Products list %s", products_name)
-        if not products_name:
+        if request.method == "POST":
+            sort = request.form['sort']
+            if sort == "sort_name":
+                products_name = []
+                for id_ in products_id:
+                    product_name = Product.query.filter_by(id=id_).first().name
+                    products_name.append(product_name)
+                products_name = sorted(products_name)
+                products_id = []
+                for name in products_name:
+                    product_id = Product.query.filter_by(name=name).first().id
+                    products_id.append(product_id)
+            elif sort == "sort_id":
+                products_id = sorted(products_id)
+            else:
+                pass
+        products_list = []
+        for i in products_id:
+            product = Product.query.filter_by(id=i).first()
+            products_list.append(product)
+        logging.info("Products list %s", products_list)
+        if not products_list:
             flash('Product list is empty', 'info')
         if current_user.is_authenticated:
-            return render_template("shop_list.html", products_list=products_list,
-                                   products_name=products_name, products_price=products_price, products_id=products_id,
-                                   products_quantity=products_quantity, current_role=current_role(),
-                                   role_req=role_req('admin'))
+            return render_template("shop_list.html", current_role=current_role(),
+                                   role_req=role_req('admin'), products_list=products_list)
         else:
-            return render_template("shop_list.html", products_list=products_list, products_quantity=products_quantity,
-                                   products_name=products_name, products_price=products_price, products_id=products_id)
+            return render_template("shop_list.html", products_list=products_list)
     else:
         product = Product.query.filter_by(name=product).first()
         if current_user.is_authenticated:

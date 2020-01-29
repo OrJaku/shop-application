@@ -1,4 +1,4 @@
-body { margin-top: 0px; background-color: #FFE;  font: 1em arial,sans-serif; }
+body { margin-top: 0px; background-color: #FFFFFF;  font: 1em arial,sans-serif; }
 h1 { margin: 0em 1em 0.1em 1em;; font-size: 18px }
 h2 { margin-left: 20px; font-size: 20px }
 p { margin-left: 10px; margin-right: 20px;, font: 1em arial,sans-serif; }
@@ -80,10 +80,10 @@ width: 80%; margin: 0.5em 2em 2em 0em; }
 button {
   background-color: silver;
   color: black;
-  padding: 8px 25px;
-  font: 1em arial, sans-serif;
-  margin-top: 8px
-
+  padding: 5px 25px;
+  font: 0.9em arial, sans-serif;
+  margin-top: 8px;
+  border-radius: 6px;
 }
 button#add:hover {
 color: green;
@@ -101,6 +101,12 @@ background: #DCDCDC;
 border: 1px solid #3171DA;
 }
 
+.sort_button {
+background-color: white;
+color: black;
+font: 1em arial, sans-serif;
+padding: 6px 8px;
+}
 
 label {
 color: #696969;

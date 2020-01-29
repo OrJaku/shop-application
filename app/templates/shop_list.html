@@ -5,35 +5,39 @@
 <body id="shop_list">
 <div id="table" class="product_list">
    <table border="0">
+
+
        <tr class="table_title">
-            <th><p class="title">Name</p></th>
+            <th><form method="POST" action="{{ url_for('shop.shop_list')}}"><p class="title">Name<button class="sort_button" name="sort" value="sort_name" type="submit">S</button></p></form></th>
+<!--            <th><p class="title">Name</p></th>-->
             <th><p class="title">Price</p></th>
             <th><p class="title">Quantity</p></th>
-            <th><p class="title">ID</p></th>
+            <th><form method="POST" action="{{ url_for('shop.shop_list')}}"><p class="title">ID<button class="sort_button" name="sort" value="sort_id" type="submit">S</button></p></form></th>
         </tr>
+
         <tr class="table_col">
            <td class="table_col">
-               {% for item in products_name %}
+               {% for item in products_list %}
                 <p>
-                  <a href="{{ url_for('shop.shop_list',product=item)}}" >{{ item }}</a>
+                  <a href="{{ url_for('shop.shop_list',product=item.name)}}" >{{ item.name }}</a>
                </p>
                {% endfor %}
            </td>
             <td class="table_col">
-               {% for item in products_price %}
-                <p>{{ item }}</p>
+               {% for item in products_list %}
+                <p>{{ item.price }}</p>
                {% endfor %}
            </td>
             <td class="table_col">
-               {% for item in products_quantity %}
-                  <p> {{ item }}</p>
+               {% for item in products_list %}
+                  <p> {{ item.quantity }}</p>
                {% endfor %}
            </td>
                  <td class="table_col">
                      <form id = 'checkbox_id' class="post-form" method = "POST" action="{{ url_for('shop.delete_selected')}}" >
-                       {% for item in products_id %}
+                       {% for item in products_list%}
                           <p>
-                              {{ item }}
+                              {{ item.id }}
                                 {% if current_user.is_authenticated %}
                                     {% if current_role == role_req %}
                                         <input type="checkbox" name="remove_product" value={{item}}>
