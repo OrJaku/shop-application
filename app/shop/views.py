@@ -395,6 +395,7 @@ def shop_list(product=None):
     if product is None:
         products_id = db.session.query(Product.id).all()
         products_id = ([x[0] for x in products_id])
+        products_id = sorted(products_id)
         if request.method == "POST":
             sort = request.form['sort']
             if sort == "sort_name":
@@ -415,7 +416,7 @@ def shop_list(product=None):
         for i in products_id:
             product = Product.query.filter_by(id=i).first()
             products_list.append(product)
-        logging.info("Products list %s", products_list)
+        # logging.info("Products list %s", products_list)
         if not products_list:
             flash('Product list is empty', 'info')
         if current_user.is_authenticated:

@@ -6,15 +6,12 @@
 <div id="table" class="product_list">
    <table border="0">
 
-
        <tr class="table_title">
             <th><form method="POST" action="{{ url_for('shop.shop_list')}}"><p class="title">Name<button class="sort_button" name="sort" value="sort_name" type="submit">S</button></p></form></th>
-<!--            <th><p class="title">Name</p></th>-->
             <th><p class="title">Price</p></th>
             <th><p class="title">Quantity</p></th>
             <th><form method="POST" action="{{ url_for('shop.shop_list')}}"><p class="title">ID<button class="sort_button" name="sort" value="sort_id" type="submit">S</button></p></form></th>
         </tr>
-
         <tr class="table_col">
            <td class="table_col">
                {% for item in products_list %}
@@ -47,7 +44,6 @@
                        {% endfor %}
                      </form>
                 </td>
-
          </tr>
    </table><br><br>
 </div>
