@@ -22,6 +22,11 @@ def create_app(config_app):
     login.login_view = "shop.login"
     from app import models
 
-    from .shop import views
-    app.register_blueprint(views.shop)
+    from .shop.views import shop
+    from .postShop.views import postShop
+    from .userShop.views import userShop
+    app.register_blueprint(shop)
+    app.register_blueprint(postShop)
+    app.register_blueprint(userShop)
+
     return app

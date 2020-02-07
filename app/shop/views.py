@@ -1,8 +1,8 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
-from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import LoginForm, RegisterForm, ChangePasswordForm
-from ..models import Product, User, Role, UserRoles, Posts, Cart
+from flask_login import login_required, current_user
+from ..models import Product, Cart
+from ..userShop.views import current_role, role_req
 import sqlalchemy.exc
 import time
 import logging
@@ -14,16 +14,6 @@ import random
 shop = Blueprint('shop', __name__, template_folder='templates')
 
 logging.basicConfig(level=logging.INFO)
-
-
-def role_req(role_name):
-    role_require_id = Role.query.filter_by(name=role_name).first().id
-    return role_require_id
-
-
-def current_role():
-    current_role_id = UserRoles.query.filter_by(user_id=current_user.id).first().role_id
-    return current_role_id
 
 
 @shop.route('/', methods=['GET'])
@@ -63,180 +53,6 @@ def home():
 
     return render_template("home.html", products_list_1=products_list_1, products_list_2=products_list_2,
                            products_list_3=products_list_3, first_product=first_product)
-
-
-@shop.route('/posts', methods=["GET"])
-def posts():
-    get_posts = db.session.query(Posts.title).all()
-    get_posts = ([n[0] for n in get_posts])
-    posts_list = []
-    for post in get_posts:
-        posts_list.append(post)
-    if not posts_list:
-        return render_template("posts.html")
-    elif len(posts_list) == 1:
-        page_post = posts_list[0]
-    else:
-        page_post = posts_list[len(posts_list) - 1]
-    post_db = Posts.query.filter_by(title=page_post).first()
-    post = Posts.query.filter_by(id=post_db.id).first().post
-    title = Posts.query.filter_by(id=post_db.id).first().title
-    user = Posts.query.filter_by(id=post_db.id).first().user
-    time_date = Posts.query.filter_by(id=post_db.id).first().time_date
-    post_id = Posts.query.filter_by(id=post_db.id).first().id
-    posts_list2 = []
-    number_of_visible_posts = 4
-    i = 0
-    if len(posts_list) == 0 or len(posts_list) == 1:
-        return render_template("posts.html", title=title, post=post, user=user, post_id=post_id, time=time_date)
-    elif len(posts_list) == 2:
-        page_post2 = posts_list[0]
-        post2 = Posts.query.filter_by(title=page_post2).first()
-        posts_list2.append(post2)
-    else:
-        while i != number_of_visible_posts:
-            i += 1
-            page_post2 = posts_list[len(posts_list) - (i+1)]
-            post2 = Posts.query.filter_by(title=page_post2).first()
-            posts_list2.append(post2)
-    return render_template("posts.html", title=title, post=post, user=user, time=time_date,
-                           post_id=post_id, posts_list2=posts_list2)
-
-
-@shop.route('/register', methods=["POST", "GET"])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(first_name=form.first_name.data,
-                    last_name=form.last_name.data,
-                    username=form.username.data,
-                    email=form.email.data,
-                    password=form.password.data,
-                    role=[Role.query.filter_by(name='guest').first()])
-
-        if len(form.password.data) < 6:
-            flash('Password is too short', 'error')
-            return redirect(url_for('shop.register'))
-        db.session.add(user)
-        db.session.commit()
-        flash('Registered successfully', 'success')
-        logging.info("User %s", user)
-        return redirect(url_for('shop.login'))
-    return render_template('register.html', title='Register', form=form)
-
-
-@shop.route('/login', methods=["GET", "POST"])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('shop.home'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid login or password', 'error')
-            return redirect(url_for('shop.login'))
-        login_user(user)
-        flash('You are logged in as %s' % (db.session.query(User.username).first()), 'success')
-        return redirect(url_for('shop.home'))
-    return render_template('login.html', title='Sing In', form=form)
-
-
-@shop.route('/logout')
-def logout():
-    logout_user()
-    flash('You are logged out', 'info')
-    return redirect(url_for('shop.home'))
-
-
-@shop.route('/users', methods=['GET', 'POST'])
-@shop.route('/users/ <username>')
-@login_required
-def users(username=None):
-    if current_role() == role_req('guest') or role_req('admin'):
-        users_list = db.session.query(User).all()
-        if username:
-            user = User.query.filter_by(username=username).first_or_404()
-            role_temp_id = UserRoles.query.filter_by(user_id=user.id).first().role_id
-            role_name = Role.query.filter_by(id=role_temp_id).first().name
-            logging.info("Role Name: %s", role_name)
-            logging.info("User: %s", user)
-            return render_template("user.html", username=username, user=user, role=role_name,
-                                   current_role=current_role(), role_req=role_req('admin'))
-        return render_template("users.html", users_list=users_list, current_role=current_role(),
-                               role_req=role_req('admin'))
-    else:
-        flash("You do not have admin access", 'error')
-        return render_template("home.html")
-
-
-@shop.route('/role/<username>', methods=['GET', 'POST'])
-@login_required
-def role(username):
-    get_role_name = request.form.get("role")
-    get_role_id = Role.query.filter_by(name=get_role_name).first().id
-    user_id = User.query.filter_by(username=username).first().id
-    db.session.query(UserRoles).filter(UserRoles.user_id == user_id).update({'role_id': get_role_id})
-    db.session.commit()
-    flash('\nRole has been changed',  'success')
-    return redirect(url_for('shop.users'))
-
-
-@shop.route('/profile/<username>', methods=['GET', 'POST'])
-@login_required
-def profile(username):
-    user = User.query.filter_by(username=current_user.username).first_or_404()
-    check_user = db.session.query(Posts.user).all()
-    check_user = ([x[0] for x in check_user])
-    if current_user.username in check_user:
-        user_posts = Posts.query.filter_by(user=current_user.username).all()
-        return render_template('profile.html', profile=user, posts=user_posts)
-    else:
-        return render_template('profile.html', profile=user)
-
-
-@shop.route('/change_password',  methods=['GET', 'POST'])
-@login_required
-def change_password():
-    form = ChangePasswordForm()
-    return render_template('changepass.html', form=form)
-
-
-@shop.route('/changing',  methods=['GET', 'POST'])
-@login_required
-def changing():
-    form = ChangePasswordForm()
-    old_password = form.old_password.data
-    new_password = form.new_password.data
-    confirm_password = form.conf_password.data
-    user = User.query.filter_by(username=current_user.username).first()
-    check_password = user.check_password(old_password)
-    if check_password is True:
-        if new_password != confirm_password:
-            flash('New password and confirm password need to be the same', 'error')
-        else:
-            user.password = new_password
-            db.session.add(user)
-            db.session.commit()
-            flash('Password has been changed', 'success')
-    elif check_password is False:
-        flash('Old  password is wrong', 'error')
-    return render_template('profile.html', form=form, profile=current_user)
-
-
-@shop.route('/remove_user', methods=['POST'])
-@login_required
-def remove_user():
-    user = request.form['user']
-    user_list = db.session.query(User.username).all()
-    user_list = ([x[0] for x in user_list])
-    logging.info("User List %s", user_list)
-    if user == 'admin' or user not in user_list:
-        flash('Invalid user', 'error')
-    else:
-        User.query.filter_by(username=user).delete()
-        db.session.commit()
-        flash(f'User: {user} has been removed', 'success')
-    return redirect(url_for('shop.users'))
 
 
 @shop.route('/add', methods=['POST'])
@@ -461,75 +277,6 @@ def add_description():
         return render_template('product.html', product=product)
 
 
-@shop.route('/add_post', methods=['POST'])
-def add_post():
-    title_list = db.session.query(Posts.title).all()
-    title_list = ([x[0] for x in title_list])
-    title = request.form['title']
-    if not title:
-        flash("You have to add title", 'error')
-        return redirect(url_for('shop.posts'))
-    elif title in title_list:
-        flash("Post with the same title does exist", 'error')
-        return redirect(url_for('shop.posts'))
-    post = request.form['post']
-    if not post:
-        flash("You have to add some text", 'error')
-        return redirect(url_for('shop.posts'))
-    if current_user.is_anonymous:
-        user = "Guest"
-    else:
-        user = current_user.username
-    seconds = time.time()
-    time_date = time.ctime(seconds)
-    new_post = Posts(title=title, post=post, user=user, time=seconds, time_date=time_date)
-    db.session.add(new_post)
-    db.session.commit()
-    return redirect(url_for('shop.posts'))
-
-
-@shop.route('/remove_post', methods=['GET', 'POST'])
-@login_required
-def remove_post():
-    rem_post = request.form.getlist("remove_post")  # post.id
-    user = User.query.filter_by(username=current_user.username).first().username
-    post_user_list = []
-    post_user_filtered_list = []
-    if 'all_posts_remove' in rem_post:
-        pass
-    else:
-        for item in rem_post:
-            post_user = Posts.query.filter_by(id=item).first().user
-            post_user_list.append(post_user)
-    if current_role() == role_req('admin'):
-        if request.method == "POST":
-            if 'all_posts_remove' in rem_post:
-                Posts.query.filter().delete()
-                db.session.commit()
-            else:
-                logging.info("Posts to remove %s", rem_post)
-                for item in rem_post:
-                    Posts.query.filter_by(id=item).delete()
-                    db.session.commit()
-                flash(f'Post: {rem_post} has been removed', 'success')
-            return redirect(url_for('shop.posts'))
-    elif user in post_user_list:
-        for item in rem_post:
-            post_user = Posts.query.filter_by(id=item).first().user
-            logging.info("User post %s", post_user)
-            if post_user == user:
-                post_user_filtered_list.append(item)
-        logging.info("Post user filtered list%s", post_user_filtered_list)
-        for item in post_user_filtered_list:
-            Posts.query.filter_by(id=item).delete()
-            db.session.commit()
-        flash(f'Post: {post_user_filtered_list} has been removed', 'success')
-        return redirect(url_for("shop.posts"))
-    else:
-        flash("You do not have access to remove this post", 'error')
-        return redirect(url_for("shop.posts"))
-
-
 @shop.route('/cart', methods=["POST", "GET"])
 @login_required
 def cart():
@@ -537,6 +284,7 @@ def cart():
     current_cart_id = current_cart_unfiltered_id.filter_by(user_id=current_user.id)
     user_cart_list_id = ([x[0] for x in current_cart_id])
     user_cart_list = []
+    product = None
     for product_id in user_cart_list_id:
         product = Product.query.filter_by(id=product_id).first()
         user_cart_list.append(product)

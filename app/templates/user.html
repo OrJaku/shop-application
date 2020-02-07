@@ -11,14 +11,14 @@
         <li>Email: <b>{{ user.email }}</b> </li>
         <li>Role: <b>{{ role }}</b> </li>
     </ul>
-            <form class="add-form" method="POST" action="{{ url_for('shop.role', username=user)}}">
+            <form class="add-form" method="POST" action="{{ url_for('userShop.role', username=user)}}">
             <select class="form-control" name="role" id="role">
                 <option value='guest'>guest </option>
                 <option value='admin'>admin </option>
             </select>
                 <button id='select' type="submit">Save</button>
             </form>
-            <form class="rem-form" method = "POST" action="{{ url_for('shop.remove_user')}}">
+            <form class="rem-form" method = "POST" action="{{ url_for('userShop.remove_user')}}">
                 <br><br><button name=user value={{username}} id='rem' type="submit" >Remove user</button>
             </form>
  </body>
