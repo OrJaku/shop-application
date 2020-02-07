@@ -17,10 +17,10 @@ def create_app(config_app):
 
     db.init_app(app)
     login.init_app(app)
-    from .models import User
+    from .userShop.models import User
     login.login_message = "You must be logged in to access this page."
     login.login_view = "userShop.login"
-    from app import models
+    # from app import models
 
     from .shop.views import shop
     from .postShop.views import postShop

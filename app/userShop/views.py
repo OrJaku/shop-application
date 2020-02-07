@@ -1,8 +1,9 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import LoginForm, RegisterForm, ChangePasswordForm
-from ..models import User, Role, UserRoles, Posts
+from app.userShop.forms import LoginForm, RegisterForm, ChangePasswordForm
+from .models import User, Role, UserRoles
+from ..postShop.models import Posts
 import logging
 
 

@@ -1,7 +1,7 @@
 from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_required, current_user
-from ..models import Product, Cart
+from .models import Product, Cart
 from ..userShop.views import current_role, role_req
 import sqlalchemy.exc
 import time
