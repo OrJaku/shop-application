@@ -12,12 +12,12 @@
             <tr class="table_col">
             <td class="table_col">
                 {% for item in users_list %}
-                <p><a href="{{ url_for('shop.users',username=item)}}" >{{ item }}</a></p>
+                <p><a href="{{ url_for('userShop.users',username=item)}}" >{{ item }}</a></p>
                 {% endfor %}
             </td>
             </tr>
     </table><br>
-        <form class="rem-form" method="POST" action="{{ url_for('shop.remove_user') }}">
+        <form class="rem-form" method="POST" action="{{ url_for('userShop.remove_user') }}">
             <input name="user" placeholder="User to remove"/><br>
             <button id="rem"  type="submit">Delete</button>
         </form>

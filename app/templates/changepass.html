@@ -3,7 +3,7 @@
 {% block h1 %}Change password{% endblock%}
 {% block page %}
 <body id="change_password">
-    <form method="post" action="{{ url_for('shop.changing') }}">
+    <form method="post" action="{{ url_for('userShop.changing') }}">
          {{ form.hidden_tag() }}
         <p>
             {{form.old_password.label}}<br>

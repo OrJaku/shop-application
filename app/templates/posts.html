@@ -2,7 +2,7 @@
 {% block title %}Posts{% endblock%}
 {% block page %}
  <body id="posts">
-        <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
+        <form id = 'main_post' class="post-form" method = "POST" action="{{ url_for('postShop.remove_post')}}">
             <div class="posts">
                <div class="main_post">
                    <p>
@@ -34,13 +34,13 @@
        {% endif %}
         </form>
           <div class="add_post">
-             <form id = 'form2' class="add-form" method = "POST" action="{{ url_for('shop.add_post')}}">
+             <form id = 'form2' class="add-form" method = "POST" action="{{ url_for('postShop.add_post')}}">
                  <br><textarea rows="1" cols="70"  name="title" placeholder="Title"></textarea>
                  <br><textarea rows="8" cols="70"  name="post" placeholder="Put text here..."></textarea><br>
                  <button id='add' name=post type="submit"  >Add new post</button>
              </form>
 
-              <form class="post-form" method = "POST" action="{{ url_for('shop.remove_post')}}">
+              <form class="post-form" method = "POST" action="{{ url_for('postShop.remove_post')}}">
                   {% if current_user.is_authenticated %}
                   <button form=main_post type="submit">Remove post</button>
                   {% endif %}
