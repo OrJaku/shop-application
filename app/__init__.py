@@ -19,7 +19,7 @@ def create_app(config_app):
     login.init_app(app)
     from .models import User
     login.login_message = "You must be logged in to access this page."
-    login.login_view = "shop.login"
+    login.login_view = "userShop.login"
     from app import models
 
     from .shop.views import shop
