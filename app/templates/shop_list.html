@@ -37,7 +37,7 @@
                               {{ item.id }}
                                 {% if current_user.is_authenticated %}
                                     {% if current_role == role_req %}
-                                        <input type="checkbox" name="remove_product" value={{item}}>
+                                        <input type="checkbox" name="remove_product" value={{item.id}}>
                                     {% endif %}
                                 {% endif %}
                           </p>
@@ -67,11 +67,7 @@
                      <select class="form-control" name="format" id="format">
                             <option value='csv'>csv </option>
                             <option value='json'>json </option>
-                     </select><br>
-                 </form>
-                 <form class="rem-form" method="POST" action="{{ url_for('shop.delete') }}">
-                     <br> <input name="product" placeholder="Product to remove"/><br>
-                     <button id="rem" type="submit">Delete</button>
+                     </select><br><br>
                  </form>
                  <form class="rem-form" method="POST">
                      <button form=checkbox_id type="submit">Delete marked</button><br><br>

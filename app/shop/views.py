@@ -101,6 +101,7 @@ def add_product_img():
 @shop.route('/delete_selected', methods=['POST'])
 def delete_selected():
     product_list_remove = request.form.getlist("remove_product")
+    print("LIST", product_list_remove)
     for product_id in product_list_remove:
         Product.query.filter_by(id=product_id).delete()
         db.session.commit()

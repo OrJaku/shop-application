@@ -111,7 +111,7 @@ def remove_post():
             Posts.query.filter_by(id=item).delete()
             db.session.commit()
         flash(f'Post: {post_user_filtered_list} has been removed', 'success')
-        return redirect(url_for("shop.postShop"))
+        return redirect(url_for("postShop.posts"))
     else:
         flash("You do not have access to remove this post", 'error')
         return redirect(url_for("postShop.posts"))
