@@ -4,42 +4,47 @@
 {% block page %}
 <body id="shop_list">
 <div id="table" class="product_list">
-   <table class="table table-striped">
-    <thead>
+   <table border="0">
+
        <tr class="table_title">
-            <th scope="col">#</th>
-            <th scope="col"><form method="POST" action="{{ url_for('shop.shop_list')}}">Name<button class="sort_button" name="sort" value="sort_name" type="submit">S</button></form></th>
-            <th scope="col">Price</th>
-            <th scope="col">Quantity</th>
-            <th scope="col"><form method="POST" action="{{ url_for('shop.shop_list')}}">ID<button class="sort_button" name="sort" value="sort_id" type="submit">S</button></form></th>
+            <th><form method="POST" action="{{ url_for('shop.shop_list')}}"><p class="title">Name<button class="sort_button" name="sort" value="sort_name" type="submit">S</button></p></form></th>
+            <th><p class="title">Price</p></th>
+            <th><p class="title">Quantity</p></th>
+            <th><form method="POST" action="{{ url_for('shop.shop_list')}}"><p class="title">ID<button class="sort_button" name="sort" value="sort_id" type="submit">S</button></p></form></th>
         </tr>
-    </thead>
-    <tbody>
-    {% for item in products_list %}
-        <tr>
-            <th scope="row"></th>
-            <td>
+        <tr class="table_col">
+           <td class="table_col">
+               {% for item in products_list %}
+                <p>
                   <a href="{{ url_for('shop.shop_list',product=item.name)}}" >{{ item.name }}</a>
-            </td>
-            <td>
-                    {{ item.price }}
-            </td>
-            <td class="row">
-                    {{ item.quantity }}
-            </td>
-                 <td>
+               </p>
+               {% endfor %}
+           </td>
+            <td class="table_col">
+               {% for item in products_list %}
+                <p>{{ item.price }}</p>
+               {% endfor %}
+           </td>
+            <td class="table_col">
+               {% for item in products_list %}
+                  <p> {{ item.quantity }}</p>
+               {% endfor %}
+           </td>
+                 <td class="table_col">
                      <form id = 'checkbox_id' class="post-form" method = "POST" action="{{ url_for('shop.delete_selected')}}" >
+                       {% for item in products_list%}
+                          <p>
                               {{ item.id }}
                                 {% if current_user.is_authenticated %}
                                     {% if current_role == role_req %}
                                         <input type="checkbox" name="remove_product" value={{item.id}}>
                                     {% endif %}
                                 {% endif %}
+                          </p>
+                       {% endfor %}
                      </form>
                 </td>
          </tr>
-        {% endfor %}
-       <tbody>
    </table><br><br>
 </div>
     <div class="admin_panel">
