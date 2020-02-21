@@ -28,36 +28,34 @@ line-height: 1.5;
 }
 
 /* Menu bars */
-ul {
-float: left;
-width: 100%;
-padding: 0;
+#menu ul {
+list-style-type: none;
 margin: 0;
-list-style: none;
+padding: 0;
+overflow: hidden;
+background-color: #e7e7e7;
 }
 #menu li a {
+transition-duration: 0.4s;
+/*border: 1px solid #CECECE;*/
 display: block;
 float: left;
-font-size: 16px;
 text-align: center;
-width: 140px;
-height: 22px;
+padding: 12px 28px;
 margin: 0em;
 text-decoration: none;
+background-color: #e7e7e7;
 color: black;
-background-color: silver;
-/*border: 1px solid navy; */
-box-shadow: 0px 2px 3px gray;
 -moz-box-shadow: 0px 2px 3px gray;
 }
 #menu li :hover {
 color: #191970;
-background: #DCDCDC;
+background: #CECECE;
 /*border: 1px solid blue;*/
 }
 #menu{
 padding-top: 0.1em;
-padding-bottom: 4em;
+padding-bottom: 0.8em;
 }
 body#home a#home,
 body#shop_list a#shop_list,
@@ -69,11 +67,21 @@ body#cart a#cart,
 body#posts a#posts
 {
 	color: #FFFFFF;
-	background: #87CEEB;
+	background: #C1C1C1;
 }
-/* Page */
+#menu input[type=text] {
+  float: right;
+  padding: 6px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 17px;
+}
+
+
+/* Page
 #page {
-width: 80%; margin: 0.5em 2em 2em 0em; }
+width: 80%; margin: 0.5em 2em 2em 0em; }*/
 
 
 /* Buttons */
