@@ -28,6 +28,16 @@ line-height: 1.5;
 }
 
 /* Menu bars */
+
+#menu input[type=text] {
+  float: right;
+  padding: 6px;
+  border: none;
+  margin-top: 16px;
+  margin-right: 16px;
+  font-size: 17px;
+}
+
 #menu ul {
 list-style-type: none;
 margin: 0;
@@ -35,13 +45,14 @@ padding: 0;
 overflow: hidden;
 background-color: #e7e7e7;
 }
+
 #menu li a {
 transition-duration: 0.4s;
 /*border: 1px solid #CECECE;*/
 display: block;
 float: left;
 text-align: center;
-padding: 12px 28px;
+padding: 32px 42px;
 margin: 0em;
 text-decoration: none;
 background-color: #e7e7e7;
@@ -53,6 +64,13 @@ color: #191970;
 background: #CECECE;
 /*border: 1px solid blue;*/
 }
+
+#menu li a#logo_nav {
+  text-align: center;
+  padding: 0px 0px;
+  margin: 0em;
+)
+
 #menu{
 padding-top: 0.1em;
 padding-bottom: 0.8em;
@@ -69,30 +87,31 @@ body#posts a#posts
 	color: #FFFFFF;
 	background: #C1C1C1;
 }
-#menu input[type=text] {
-  float: right;
-  padding: 6px;
-  border: none;
-  margin-top: 8px;
-  margin-right: 16px;
-  font-size: 17px;
 }
 
-
-/* Page
+/* Page */
 #page {
-width: 80%; margin: 0.5em 2em 2em 0em; }*/
+ margin: 1em 2em 2em 0em;
+}
 
 
 /* Buttons */
 button {
-  background-color: silver;
+  background-color: #e7e7e7;
   color: black;
-  padding: 5px 25px;
+  padding: 12px 24px;
   font: 0.9em arial, sans-serif;
   margin-top: 8px;
-  border-radius: 6px;
+  border-radius: 5px;
 }
+button:hover {
+color: black;
+background: #C1C1C1;
+transition-duration: 0.2s;
+
+/*border: 1px solid;*/
+}
+/*
 button#add:hover {
 color: green;
 background: #DCDCDC;
@@ -107,7 +126,7 @@ button#select:hover {
 color: #3171DA;
 background: #DCDCDC;
 border: 1px solid #3171DA;
-}
+} */
 
 .sort_button {
 background-color: white;
@@ -205,7 +224,9 @@ margin-left: 8px
 }
 
 .add_post {
-float:right
+float:right;
+margin-right: 300px;
+
 }
 
 .author {

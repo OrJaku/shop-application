@@ -18,6 +18,7 @@
 <!--    <img src="https://i.ibb.co/N9ryPQ2/logo.png" alt="logo" border="0" />-->
     <div id="menu" class="cb">
     <ul id="navibar">
+        <li><a id="logo_nav" ><img src="https://i.ibb.co/bQ7j622/unnamed.png" alt="LOGO" border="0"></a></li>
         <li><a href="{{ url_for('shop.home') }}" id="home">Home</a></li>
         {% if current_user.is_authenticated %}
         <li><a href="{{ url_for('userShop.profile',username=current_user)}}" id="profile">Profile</a></li>
@@ -31,7 +32,7 @@
         {% else %}
         <li><a href="{{ url_for('userShop.logout') }}" id="logout">Logout: <b>{{ current_user}}</b></a></li>
         {% endif %}
-        <input type="text" placeholder="Search..">
+        <li><input type="text" placeholder="Search.."></li>
     </ul>
   </div>
    <h1>{% block h1 %}{% endblock %}</h1>

@@ -60,7 +60,7 @@
                  <form method="POST" action="{{ url_for('shop.import_products') }}" enctype="multipart/form-data">
                      <br> Select a file:
                      <br><input type="file" name=file accept=".csv, .json">
-                     <br><button type="submit">Import file</button><br>
+                     <br><button  type="submit">Import file</button><br>
                  </form>
                 <form class="export-form" method="POST" action="{{ url_for('shop.export_products') }}">
                      <button type="submit">Export file</button>

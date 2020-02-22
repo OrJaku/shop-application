@@ -7,10 +7,11 @@
                <div class="main_post">
                    <p>
                        <b>{{title}} </b>
-                   {% if current_user.is_authenticated %}
-                       <input type="checkbox" name='remove_post' value={{post_id}}><i>{{post_id}}</i>
+                       {% if current_user.is_authenticated %}
+                            <input type="checkbox" name='remove_post' value={{post_id}}><i>{{post_id}}</i>
+                       {% endif %}
+
                    </p>
-                   {% endif %}
                    <p>{{post}}</p>
                    <p class="author"><i>Author: <b>{{user}}</b></i></p>
                    <p><div class="post_date">{{time}}</div></p>
