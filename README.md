@@ -1,6 +1,7 @@
 # shop-application
 
 ##### It is web application base on **Python - Flask**  (and HTML/CSS)
+##### Main technology: python, flask, html/css, postgres DB
 
 ###### Application abilities:
 ####
