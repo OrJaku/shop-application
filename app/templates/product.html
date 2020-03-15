@@ -18,13 +18,11 @@
                         <input id="quantity" name=new_quantity value={{product.quantity}}>
                         <button name=product_id value={{product.id}} type="submit">Change</button>
                     </form>
-                 {% endif %}
-            {% endif %}
-        </li>
-        <li><br>
-        Description: <b>{{ product.description }}</b>
-         {% if current_user.is_authenticated %}
-            {% if current_role == role_req %}
+                </li>
+            </ul>
+                <br>
+                 Description: <b>{{ product.description }}</b>
+
                 <form class="add-form" method = "POST" action="{{ url_for('shop.add_description')}}">
                     <br><textarea rows="5" cols="50"  name="description" >{{product.description}}</textarea><br>
                     <button name=product_id value={{product.id}} id='select' type="submit">Change description</button>
@@ -38,12 +36,8 @@
                 </form>
             {% endif %}
          {% endif %}
-        </li>
-        <li>
             <form class="add-form" method = "POST" action="{{ url_for('shop.cart')}}">
                 <br><br><button name=product_id value={{product.id}} id='add' type="submit" >Add to cart</button>
             </form>
-        </li>
-    </ul>
  </body>
 {% endblock %}

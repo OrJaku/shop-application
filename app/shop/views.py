@@ -318,7 +318,7 @@ def clear_cart():
 def buy():
     buying_quantity = 1
     cart_products = Cart.query.filter_by(user_id=current_user.id)
-    flash('Products:\n', 'success')
+    flash('You bought:', 'success')
     for products in cart_products:
         product = Product.query.filter_by(id=products.product_id).first()
         update_quantity = product.quantity - buying_quantity
@@ -326,5 +326,4 @@ def buy():
         cart_products.delete()
         db.session.commit()
         flash(f'{product.name}', 'success')
-    flash('\nhave been bought', 'success')
     return redirect(url_for("shop.cart"))
