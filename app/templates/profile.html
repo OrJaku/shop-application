@@ -1,15 +1,14 @@
 {% extends "body.html" %}
 {% block title %}{{ profile }}{% endblock%}
-{% block h1 %}Welcome <i>{{ profile }}</i>{% endblock%}
 {% block page %}
  <body id="profile">
-    <ul class="profile">
-        <li>Username: <b>{{ profile }}</b> </li>
-        <li>First name: <b>{{ profile.first_name }}</b> </li>
-        <li>Last name: <b>{{ profile.last_name }}</b> </li>
-        <li>Email: <b>{{ profile.email }}</b> </li>
+<!--        <img src="{{profile.picture}}" alt="// My picture //" onerror="this.src='https://i.ibb.co/wh9JJYp/profile-pic.png'" border="0"-->
+<!--         height="300" width="510">-->
+        <p>Username: <b>{{ profile }}</b> </p>
+        <p>First name: <b>{{ profile.first_name }}</b> </p>
+        <p>Last name: <b>{{ profile.last_name }}</b> </p>
+        <p>Email: <b>{{ profile.email }}</b> </p>
         <br>
-    </ul>
     <a href="{{ url_for('userShop.change_password')}}" id="changepass">Change password</a>
     <br><br><p><b>Your posts:</b></p>
     <form  class="post-form" method = "POST" action="{{ url_for('postShop.remove_post')}}">

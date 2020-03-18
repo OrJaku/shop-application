@@ -1,7 +1,10 @@
-body { margin-top: 0px; background-color: #FFFFFF;  font: 1em arial,sans-serif; }
-h1 { margin: 0em 1em 0.1em 1em;; font-size: 18px }
+body { margin-top: 0px; margin-left: 0em; background-color: #FFFFFF;  font: 1em Avantgarde,sans-serif; }
+h1 { margin: 0em 1em 0.1em 1em; font-size: 18px }
 h2 { margin-left: 20px; font-size: 20px }
 p { margin-left: 10px; margin-right: 20px;, font: 1em arial,sans-serif; }
+
+
+
 
 /* Table */
 
@@ -91,7 +94,7 @@ body#posts a#posts
 
 /* Page */
 #page {
- margin: 1em 2em 2em 0em;
+ margin: 1.5em 2em 2em 2em;
 }
 
 
