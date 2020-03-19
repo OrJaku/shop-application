@@ -12,8 +12,8 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(128), unique=False, nullable=False)
     last_name = db.Column(db.String(128), unique=False, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    # picture = db.Column(db.String(), unique=True, nullable=False)
     role = db.relationship('Role', secondary='user_roles', backref=db.backref('user', lazy='dynamic'))
+    picture = db.Column(db.String(200))
 
     @property
     def password(self):
