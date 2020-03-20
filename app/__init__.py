@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_login import LoginManager
 from .config import app_config
 
@@ -13,7 +12,7 @@ def create_app(config_app):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_app)
 
-    migrate = Migrate(app, db)
+
 
     db.init_app(app)
     login.init_app(app)
