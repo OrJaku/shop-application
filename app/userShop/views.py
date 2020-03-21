@@ -4,10 +4,13 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.userShop.forms import LoginForm, RegisterForm, ChangePasswordForm
 from .models import User, Role, UserRoles
 from ..postShop.models import Posts
+from flask_dance.contrib.google import make_google_blueprint, google
 import logging
 
 
 userShop = Blueprint('userShop', __name__, template_folder='templates')
+google_oauth = make_google_blueprint(client_id="", client_secret="",
+                                     offline=True, scope=["profile", "email"])
 
 
 def role_req(role_name):
@@ -63,6 +66,16 @@ def logout():
     logout_user()
     flash('You are logged out', 'info')
     return redirect(url_for('shop.home'))
+
+
+@userShop.route('/login/google')
+def google_login():
+    if not google.authorized:
+        return render_template(url_for(google.login))
+    resp = google.get('/oauth2/v2/userinfo')
+    assert resp.ok, resp.text
+    email = resp.json()['email']
+    return render_template('home.html', email=email)
 
 
 @userShop.route('/users', methods=['GET', 'POST'])
