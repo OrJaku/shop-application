@@ -15,6 +15,9 @@
             </p>
             <p>{{ form.submit() }}</p><br>
         </form>
+        <form id = '' class="" method = "POST" action="{{ url_for('userShop.google_login')}}">
+            <button id='add' name=post type="submit"  >Google login</button>
+        </form>
             <ul>
                 <li><a href="{{ url_for('userShop.register') }}" id="users">Registration</a></li>
             </ul><br><br>

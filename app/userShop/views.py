@@ -6,11 +6,18 @@ from .models import User, Role, UserRoles
 from ..postShop.models import Posts
 from flask_dance.contrib.google import make_google_blueprint, google
 import logging
+import json
 
 
 userShop = Blueprint('userShop', __name__, template_folder='templates')
-google_oauth = make_google_blueprint(client_id="", client_secret="",
-                                     offline=True, scope=["profile", "email"])
+with open('google_client.json') as f:
+    data = json.load(f)
+    client_id = (data[0]['client_id'])
+    client_secret = (data[1]['client_secret'])
+    google_oauth = make_google_blueprint(client_id=client_id,
+                                         client_secret=client_secret,
+                                         offline=True,
+                                         scope=["profile", "email"])
 
 
 def role_req(role_name):
@@ -68,14 +75,14 @@ def logout():
     return redirect(url_for('shop.home'))
 
 
-@userShop.route('/login/google')
+@userShop.route('/login/google', methods=['GET', 'POST'])
 def google_login():
     if not google.authorized:
-        return render_template(url_for(google.login))
+        return redirect(url_for("google.login"))
     resp = google.get('/oauth2/v2/userinfo')
     assert resp.ok, resp.text
     email = resp.json()['email']
-    return render_template('home.html', email=email)
+    return render_template('home.html')
 
 
 @userShop.route('/users', methods=['GET', 'POST'])

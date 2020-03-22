@@ -2,7 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from .config import app_config
-from flask_dance.contrib.google import make_google_blueprint, google
 
 
 db = SQLAlchemy()
@@ -26,6 +25,6 @@ def create_app(config_app):
     app.register_blueprint(shop)
     app.register_blueprint(postShop)
     app.register_blueprint(userShop)
-    app.register_blueprint(google_oauth, url_prefix='/login')
+    app.register_blueprint(google_oauth, url_prefix='/login/google')
 
     return app
