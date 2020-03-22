@@ -1,9 +1,11 @@
 from .. import db
-from flask import render_template, request, url_for, redirect, flash, Blueprint
-from flask_login import login_required, current_user
+from flask import render_template, request, url_for, redirect, flash, Blueprint, session
+from flask_login import login_required, current_user, login_user
 from .models import Product, Cart
+from ..userShop.models import User
 from ..userShop.views import current_role, role_req
 import sqlalchemy.exc
+from flask_dance.contrib.google import google
 import time
 import logging
 import io
@@ -50,7 +52,18 @@ def home():
         products_list_3 = rnd_products_list[7:10]
     except IndexError:
         products_list_3 = []
-
+    if google.authorized:
+        resp = google.get('/oauth2/v2/userinfo')
+        user_data = resp.json()
+        user = User(id=0,
+                    username=user_data['given_name'],
+                    email=user_data['email'],
+                    first_name=user_data['given_name'],
+                    last_name=user_data['family_name']
+                    )
+        login_user(user)
+    else:
+        pass
     return render_template("home.html", products_list_1=products_list_1, products_list_2=products_list_2,
                            products_list_3=products_list_3, first_product=first_product)
 

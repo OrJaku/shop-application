@@ -81,7 +81,9 @@ def google_login():
         return redirect(url_for("google.login"))
     resp = google.get('/oauth2/v2/userinfo')
     assert resp.ok, resp.text
-    email = resp.json()['email']
+    user_data = resp.json()
+    user = User(email=user_data['email'], first_name=user_data['given_name'], last_name=user_data['family_name'])
+    login_user(user)
     return render_template('home.html')
 
 
