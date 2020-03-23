@@ -30,6 +30,21 @@ class User(UserMixin, db.Model):
         return f'{self.username}'
 
 
+class UserOauth(UserMixin, db.Model):
+    __tablename__ = 'user_oauth'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(128), unique=True, nullable=False)
+    first_name = db.Column(db.String(128), unique=False, nullable=False)
+    last_name = db.Column(db.String(128), unique=False, nullable=False)
+    email = db.Column(db.String(128), unique=True, nullable=False)
+    role = db.Column(db.String(10))
+    picture = db.Column(db.String(200))
+
+    def __repr__(self):
+        return f'{self.username}'
+
+
 class Role(db.Model):
     __tabelename__ = 'role'
 
@@ -46,4 +61,6 @@ class UserRoles(db.Model):
 
 @login.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+
+    User.query.get(int(user_id))
+    return UserOauth.query.get(int(user_id))

@@ -30,7 +30,7 @@
         {% if current_user.is_anonymous %}
         <li><a href="{{ url_for('userShop.login') }}" id="login">Login</a></li>
         {% else %}
-        <li><a href="{{ url_for('userShop.logout') }}" id="logout">Logout: <b>{{ current_user}}</b></a></li>
+        <li><a href="{{ url_for('userShop.logout') }}" id="logout">Logout: <b>{{ current_user.username}}</b></a></li>
         {% endif %}
         <li><input type="text" placeholder="Search.."></li>
     </ul>

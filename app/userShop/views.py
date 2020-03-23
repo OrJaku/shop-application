@@ -2,7 +2,7 @@ from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from app.userShop.forms import LoginForm, RegisterForm, ChangePasswordForm
-from .models import User, Role, UserRoles
+from .models import User, Role, UserRoles, UserOauth
 from ..postShop.models import Posts
 from flask_dance.contrib.google import make_google_blueprint, google
 import logging
@@ -62,6 +62,7 @@ def login():
         if user is None or not user.check_password(form.password.data):
             flash('Invalid login or password', 'error')
             return redirect(url_for('userShop.login'))
+        print("USER", )
         login_user(user)
         flash('You are logged in as %s' % (db.session.query(User.username).first()), 'success')
         return redirect(url_for('shop.home'))
@@ -79,12 +80,36 @@ def logout():
 def google_login():
     if not google.authorized:
         return redirect(url_for("google.login"))
-    resp = google.get('/oauth2/v2/userinfo')
-    assert resp.ok, resp.text
-    user_data = resp.json()
-    user = User(email=user_data['email'], first_name=user_data['given_name'], last_name=user_data['family_name'])
-    login_user(user)
-    return render_template('home.html')
+    else:
+        resp = google.get('/oauth2/v2/userinfo')
+        assert resp.ok, resp.text
+        print("resp", resp)
+        user_data = resp.json()
+        email = user_data['email']
+        print("email", email)
+
+        emails = db.session.query(UserOauth.email).all()
+        emails = ([x[0] for x in emails])
+
+        if email in emails:
+            user = UserOauth.query.filter_by(email=email).first()
+            print("Auth:", user)
+        else:
+            user = UserOauth(username=user_data['given_name'],
+                             email=user_data['email'],
+                             first_name=user_data['given_name'],
+                             last_name=user_data['family_name'],
+                             role='guest'
+                             )
+            print("Not auth")
+            db.session.add(user)
+            db.session.commit()
+        print('USER_OAUTH', user)
+
+        login_user(user)
+        print("CU", current_user)
+        flash('You are logged in as %s' % (db.session.query(UserOauth.username).first()), 'success')
+        return redirect(url_for('shop.home'))
 
 
 @userShop.route('/users', methods=['GET', 'POST'])
