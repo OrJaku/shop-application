@@ -99,7 +99,7 @@ def google_login():
                              email=user_data['email'],
                              first_name=user_data['given_name'],
                              last_name=user_data['family_name'],
-                             role='guest'
+                             role='google'
                              )
             print("Not auth")
             db.session.add(user)
@@ -148,7 +148,7 @@ def role(username):
 @userShop.route('/profile/<username>', methods=['GET', 'POST'])
 @login_required
 def profile(username):
-    user = User.query.filter_by(username=current_user.username).first_or_404()
+    user = User.query.filter_by(username=current_user.username).first()
     check_user = db.session.query(Posts.user).all()
     check_user = ([x[0] for x in check_user])
     if current_user.username in check_user:

@@ -61,6 +61,16 @@ class UserRoles(db.Model):
 
 @login.user_loader
 def load_user(user_id):
+    try:
+        role_temp_id = UserRoles.query.filter_by(user_id=user_id).first().role_id
+        role = Role.query.filter_by(id=role_temp_id).first().name
+    except AttributeError:
+        role = "google"
 
-    User.query.get(int(user_id))
-    return UserOauth.query.get(int(user_id))
+    if role == "admin" or role == "guest":
+        user = User.query.get(int(user_id))
+    elif role == "google":
+        user = UserOauth.query.get(int(user_id))
+    else:
+        user = None
+    return user
