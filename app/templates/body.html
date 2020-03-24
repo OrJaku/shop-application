@@ -15,7 +15,6 @@
             </div>
         {% endif %}
       {% endwith %}
-<!--    <img src="https://i.ibb.co/N9ryPQ2/logo.png" alt="logo" border="0" />-->
     <div id="menu" class="cb">
     <ul id="navibar">
         <li><a id="logo_nav" ><img src="https://i.ibb.co/bQ7j622/unnamed.png" alt="LOGO" border="0"></a></li>
@@ -30,7 +29,13 @@
         {% if current_user.is_anonymous %}
         <li><a href="{{ url_for('userShop.login') }}" id="login">Login</a></li>
         {% else %}
-        <li><a href="{{ url_for('userShop.logout') }}" id="logout">Logout: <b>{{ current_user.username}}</b></a></li>
+        <li><a href="{{ url_for('userShop.logout') }}" id="logout">Logout:
+            <b>{{ current_user.username}}</b>
+            {%if current_user.type == "google" %}
+                <img src="https://i2.wp.com/www.xanjero.com/wp-content/uploads/2018/04/G-Suite-apps-cards.png?fit=512%2C512" alt="G" border="0" height="20" width="20">
+            {%endif%}
+            </a>
+        </li>
         {% endif %}
         <li><input type="text" placeholder="Search.."></li>
     </ul>

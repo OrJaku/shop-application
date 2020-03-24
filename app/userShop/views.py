@@ -2,7 +2,7 @@ from .. import db
 from flask import render_template, request, url_for, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from app.userShop.forms import LoginForm, RegisterForm, ChangePasswordForm
-from .models import User, Role, UserRoles, UserOauth
+from .models import User, Role, UserRoles
 from ..postShop.models import Posts
 from flask_dance.contrib.google import make_google_blueprint, google
 import logging
@@ -17,7 +17,8 @@ with open('google_client.json') as f:
     google_oauth = make_google_blueprint(client_id=client_id,
                                          client_secret=client_secret,
                                          offline=True,
-                                         scope=["profile", "email"])
+                                         scope=["profile", "email"],
+                                         redirect_to='userShop.google_login')
 
 
 def role_req(role_name):
@@ -39,7 +40,8 @@ def register():
                     username=form.username.data,
                     email=form.email.data,
                     password=form.password.data,
-                    role=[Role.query.filter_by(name='guest').first()])
+                    role=[Role.query.filter_by(name='guest').first()],
+                    )
 
         if len(form.password.data) < 6:
             flash('Password is too short', 'error')
@@ -83,32 +85,33 @@ def google_login():
     else:
         resp = google.get('/oauth2/v2/userinfo')
         assert resp.ok, resp.text
-        print("resp", resp)
         user_data = resp.json()
         email = user_data['email']
-        print("email", email)
-
-        emails = db.session.query(UserOauth.email).all()
+        emails = db.session.query(User.email).all()
         emails = ([x[0] for x in emails])
-
         if email in emails:
-            user = UserOauth.query.filter_by(email=email).first()
-            print("Auth:", user)
+            user = User.query.filter_by(email=email).first()
         else:
-            user = UserOauth(username=user_data['given_name'],
-                             email=user_data['email'],
-                             first_name=user_data['given_name'],
-                             last_name=user_data['family_name'],
-                             role='google'
-                             )
-            print("Not auth")
+            username = user_data['given_name']
+            username_in_db = db.session.query(User.username).all()
+            username_in_db = ([x[0] for x in username_in_db])
+            if username in username_in_db:
+                username += '_google'
+            else:
+                pass
+            user = User(username=username,
+                        password=user_data['email'],
+                        email=user_data['email'],
+                        first_name=user_data['given_name'],
+                        last_name=user_data['family_name'],
+                        picture=user_data['picture'],
+                        role=[Role.query.filter_by(name='google').first()],
+                        type='google'
+                        )
             db.session.add(user)
             db.session.commit()
-        print('USER_OAUTH', user)
-
         login_user(user)
-        print("CU", current_user)
-        flash('You are logged in as %s' % (db.session.query(UserOauth.username).first()), 'success')
+        flash('You are logged in as %s' % (db.session.query(User.username).first()), 'success')
         return redirect(url_for('shop.home'))
 
 

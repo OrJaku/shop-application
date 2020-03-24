@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     role = db.relationship('Role', secondary='user_roles', backref=db.backref('user', lazy='dynamic'))
     picture = db.Column(db.String(200))
+    type = db.Column(db.String(10))
 
     @property
     def password(self):
@@ -25,21 +26,6 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return f'{self.username}'
-
-
-class UserOauth(UserMixin, db.Model):
-    __tablename__ = 'user_oauth'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), unique=True, nullable=False)
-    first_name = db.Column(db.String(128), unique=False, nullable=False)
-    last_name = db.Column(db.String(128), unique=False, nullable=False)
-    email = db.Column(db.String(128), unique=True, nullable=False)
-    role = db.Column(db.String(10))
-    picture = db.Column(db.String(200))
 
     def __repr__(self):
         return f'{self.username}'
@@ -61,16 +47,5 @@ class UserRoles(db.Model):
 
 @login.user_loader
 def load_user(user_id):
-    try:
-        role_temp_id = UserRoles.query.filter_by(user_id=user_id).first().role_id
-        role = Role.query.filter_by(id=role_temp_id).first().name
-    except AttributeError:
-        role = "google"
 
-    if role == "admin" or role == "guest":
-        user = User.query.get(int(user_id))
-    elif role == "google":
-        user = UserOauth.query.get(int(user_id))
-    else:
-        user = None
-    return user
+    return User.query.get(int(user_id))

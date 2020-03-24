@@ -16,7 +16,9 @@
             <p>{{ form.submit() }}</p><br>
         </form>
         <form id = '' class="" method = "POST" action="{{ url_for('userShop.google_login')}}">
-            <button id='add' name=post type="submit"  >Google login</button>
+            <button id='add' name=post type="submit">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1280px-Google_2015_logo.svg.png" alt="Google" border="0" height="25" width="80">
+            </button>
         </form>
             <ul>
                 <li><a href="{{ url_for('userShop.register') }}" id="users">Registration</a></li>
